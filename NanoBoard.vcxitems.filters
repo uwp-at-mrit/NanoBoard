@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="device">
+      <UniqueIdentifier>{11450033-8709-4127-bb08-343c763260cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="device\vessel">
+      <UniqueIdentifier>{fda72249-12ac-4447-b2bb-ccf9e3c40678}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="stone">
+      <UniqueIdentifier>{8bbe2fd9-9ac1-4bdc-a8e5-93f1a5e916c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="stone\tongue">
+      <UniqueIdentifier>{b795321b-c63a-459b-8f37-af90fb3eacff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="stone\tongue\en-US">
+      <UniqueIdentifier>{594f0255-36f0-414e-95fe-0f1bb8ff4895}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="stone\tongue\zh-CN">
+      <UniqueIdentifier>{9381cd8b-719c-40e4-af72-b4d2248de58e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)device\editor.cpp">
+      <Filter>device</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)device\vessel\trailing_suction_dredger.cpp">
+      <Filter>device\vessel</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)device\editor.hpp">
+      <Filter>device</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)device\vessel\trailing_suction_dredger.hpp">
+      <Filter>device\vessel</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <PRIResource Include="$(MSBuildThisFileDirectory)stone\tongue\en-US\gps_cs.resw">
+      <Filter>stone\tongue\en-US</Filter>
+    </PRIResource>
+    <PRIResource Include="$(MSBuildThisFileDirectory)stone\tongue\en-US\tongue.resw">
+      <Filter>stone\tongue\en-US</Filter>
+    </PRIResource>
+    <PRIResource Include="$(MSBuildThisFileDirectory)stone\tongue\en-US\trailing_suction_dredger.resw">
+      <Filter>stone\tongue\en-US</Filter>
+    </PRIResource>
+    <PRIResource Include="$(MSBuildThisFileDirectory)stone\tongue\zh-CN\gps_cs.resw">
+      <Filter>stone\tongue\zh-CN</Filter>
+    </PRIResource>
+    <PRIResource Include="$(MSBuildThisFileDirectory)stone\tongue\zh-CN\tongue.resw">
+      <Filter>stone\tongue\zh-CN</Filter>
+    </PRIResource>
+    <PRIResource Include="$(MSBuildThisFileDirectory)stone\tongue\zh-CN\trailing_suction_dredger.resw">
+      <Filter>stone\tongue\zh-CN</Filter>
+    </PRIResource>
+  </ItemGroup>
+</Project>

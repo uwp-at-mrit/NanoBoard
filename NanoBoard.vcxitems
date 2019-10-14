@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Label="Globals">
     <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
@@ -12,5 +12,21 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)device\editor.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)device\vessel\trailing_suction_dredger.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)device\editor.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)device\vessel\trailing_suction_dredger.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <PRIResource Include="$(MSBuildThisFileDirectory)stone\tongue\en-US\gps_cs.resw" />
+    <PRIResource Include="$(MSBuildThisFileDirectory)stone\tongue\en-US\tongue.resw" />
+    <PRIResource Include="$(MSBuildThisFileDirectory)stone\tongue\en-US\trailing_suction_dredger.resw" />
+    <PRIResource Include="$(MSBuildThisFileDirectory)stone\tongue\zh-CN\gps_cs.resw" />
+    <PRIResource Include="$(MSBuildThisFileDirectory)stone\tongue\zh-CN\tongue.resw" />
+    <PRIResource Include="$(MSBuildThisFileDirectory)stone\tongue\zh-CN\trailing_suction_dredger.resw" />
   </ItemGroup>
 </Project>
