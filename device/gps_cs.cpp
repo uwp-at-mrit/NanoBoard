@@ -104,6 +104,7 @@ public:
 		}
 
 		this->master->insert(this->gps);
+		this->gps->set_north(-45.0);
 
 		for (auto it = this->regions.begin(); it != this->regions.end(); it++) {
 			it->second->camouflage(true);
