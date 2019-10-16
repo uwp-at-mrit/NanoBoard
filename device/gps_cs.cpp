@@ -82,7 +82,7 @@ public:
 			this->ps[id] = this->insert_parameter_field(id, precision);
 		}
 
-		this->load_test_field(GCS::B, 3117.6792, 4);
+		this->load_test_field(GCS::B, 3117.6797, 4);
 		this->load_test_field(GCS::L, 12147.5565, 4);
 		this->load_test_field(GCS::H, 30.0, 2);
 
@@ -92,11 +92,12 @@ public:
 
 		{ // load regions
 			float rcorner = inset * 0.25F;
+			float gapsize = inset * 0.618F;
 			float rwidth, rheight;
 
 			this->is[GCS::B]->fill_extent(0.0F, 0.0F, &rwidth, &rheight);
-			rwidth = (rwidth + inset) * 2.0F;
-			rheight = (rheight + inset) * 3.0F + inset;
+			rwidth = (rwidth + gapsize) * 2.0F;
+			rheight = (rheight + gapsize) * 3.0F + gapsize;
 
 			this->regions[GCS::B] = this->master->insert_one(new RoundedRectanglet(rwidth, rheight, rcorner, nullptr, region_border_color));
 			this->regions[GCS::X] = this->master->insert_one(new RoundedRectanglet(rwidth, rheight, rcorner, nullptr, region_border_color));
@@ -117,12 +118,12 @@ public:
 		this->is[GCS::B]->fill_extent(0.0F, 0.0F, nullptr, &iheight);
 
 		this->reflow_parameter_fields(frame, xoff, _E0(GCS), GCS::_, inset, pheight, GCS::Tx);
-		this->master->move_to(this->gps, frame, GraphletAnchor::RT, GraphletAnchor::RT, -inset, inset);
-
 		this->master->move_to(this->regions[GCS::X], frame, GraphletAnchor::RB, GraphletAnchor::RB, -inset, -inset);
 		this->master->move_to(this->regions[GCS::B], this->regions[GCS::X], GraphletAnchor::CT, GraphletAnchor::CB, 0.0F, -inset);
 		this->reflow_test_fields(GCS::B, GCS::H, GCS::X, GCS::Z, inset, iheight);
 		this->reflow_test_fields(GCS::X, GCS::Z, GCS::B, GCS::H, inset, iheight);
+
+		this->master->move_to(this->gps, this->regions[GCS::B], 0.5F, frame, 0.0F, GraphletAnchor::CT, 0.0F, inset);
 	}
 
 	void on_graphlet_ready(IGraphlet* g) {
@@ -145,11 +146,11 @@ public:
 			this->refresh_output_fields();
 		}
 
-		return (modified && (dim->id < GCS::_));
+		return modified && (dim->id < GCS::_);
 	}
 
 	bool on_apply() {
-		this->refresh_entity();
+		this->refresh_entity(); // duplicate work
 		this->gps->refresh(this->entity);
 
 		this->refresh_output_fields();
@@ -159,9 +160,11 @@ public:
 
 	bool on_reset() {
 		if (this->gps != nullptr) {
-			this->entity = this->gps->clone_gpscs(this->entity);
-			this->refresh_parameter_fields();
-			this->refresh_output_fields();
+			if (!this->master->up_to_date()) {
+				this->entity = this->gps->clone_gpscs(this->entity);
+				this->refresh_parameter_fields();
+				this->refresh_output_fields();
+			}
 		}
 
 		return true;
@@ -178,29 +181,22 @@ private:
 			this->entity = ref new GPSCS();
 		}
 
-		if (!this->master->up_to_date()) {
-			this->master->begin_update_sequence();
+		GPS_Refresh_Vertex(this->entity, a, this->ps, GCS::a);
+		GPS_Refresh_Vertex(this->entity, f, this->ps, GCS::f);
+		GPS_Refresh_Vertex(this->entity, cm, this->ps, GCS::CM);
 
-			GPS_Refresh_Vertex(this->entity, a, this->ps, GCS::a);
-			GPS_Refresh_Vertex(this->entity, f, this->ps, GCS::f);
-			GPS_Refresh_Vertex(this->entity, cm, this->ps, GCS::CM);
+		GPS_Refresh_Vertex(this->entity, cs_tx, this->ps, GCS::Tx);
+		GPS_Refresh_Vertex(this->entity, cs_ty, this->ps, GCS::Ty);
+		GPS_Refresh_Vertex(this->entity, cs_tz, this->ps, GCS::Tz);
+		GPS_Refresh_Vertex(this->entity, cs_s, this->ps, GCS::S);
+		GPS_Refresh_Vertex(this->entity, cs_rx, this->ps, GCS::Rx);
+		GPS_Refresh_Vertex(this->entity, cs_ry, this->ps, GCS::Ry);
+		GPS_Refresh_Vertex(this->entity, cs_rz, this->ps, GCS::Rz);
 
-			GPS_Refresh_Vertex(this->entity, cs_tx, this->ps, GCS::Tx);
-			GPS_Refresh_Vertex(this->entity, cs_ty, this->ps, GCS::Ty);
-			GPS_Refresh_Vertex(this->entity, cs_tz, this->ps, GCS::Tz);
-			GPS_Refresh_Vertex(this->entity, cs_s, this->ps, GCS::S);
-			GPS_Refresh_Vertex(this->entity, cs_rx, this->ps, GCS::Rx);
-			GPS_Refresh_Vertex(this->entity, cs_ry, this->ps, GCS::Ry);
-			GPS_Refresh_Vertex(this->entity, cs_rz, this->ps, GCS::Rz);
-
-			GPS_Refresh_Vertex(this->entity, gk_dx, this->ps, GCS::Dx);
-			GPS_Refresh_Vertex(this->entity, gk_dy, this->ps, GCS::Dy);
-			GPS_Refresh_Vertex(this->entity, gk_dz, this->ps, GCS::Dz);
-			GPS_Refresh_Vertex(this->entity, utm_s, this->ps, GCS::UTM_S);
-			
-			this->master->notify_updated();
-			this->master->end_update_sequence();
-		}
+		GPS_Refresh_Vertex(this->entity, gk_dx, this->ps, GCS::Dx);
+		GPS_Refresh_Vertex(this->entity, gk_dy, this->ps, GCS::Dy);
+		GPS_Refresh_Vertex(this->entity, gk_dz, this->ps, GCS::Dz);
+		GPS_Refresh_Vertex(this->entity, utm_s, this->ps, GCS::UTM_S);
 	}
 
 	void refresh_parameter_fields() {
@@ -301,16 +297,17 @@ private:
 	void reflow_test_fields(GCS id0, GCS idn, GCS lbl0, GCS lbln, float inset, float iheight) {
 		float fln = _F(idn) - _F(id0) + 1.0F;
 		float idx_1 = _F(id0) - 1.0F;
-		float rwidth, rheight;
+		float rwidth, rheight, vgapsize;
 		GCS lbl = lbl0;
 
 		this->regions[id0]->fill_extent(0.0F, 0.0F, &rwidth, &rheight);
+		vgapsize = (rheight - fln * iheight) / (fln + 1.0F);
 
 		for (GCS id = id0; id <= idn; id++, lbl++) {
-			float yrow_p1 = (rheight - inset) / fln * (_F(id) - idx_1);
+			float yrow_p1 = (iheight + vgapsize) * (_F(id) - idx_1);
 
 			this->master->move_to(this->is[id], this->regions[id0], GraphletAnchor::CT, GraphletAnchor::RB, 0.0F, yrow_p1);
-			this->master->move_to(this->os[lbl], this->is[id], GraphletAnchor::RC, GraphletAnchor::LC);
+			this->master->move_to(this->os[lbl], this->is[id], GraphletAnchor::RC, GraphletAnchor::LC, inset);
 		}
 	}
 

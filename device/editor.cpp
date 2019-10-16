@@ -130,9 +130,11 @@ void EditorPlanet::notify_modification() {
 }
 
 void EditorPlanet::notify_updated() {
+	IGraphlet* cfg = this->get_focus_graphlet();
+
 	this->begin_update_sequence();
 
-	if (this->get_focus_graphlet() == this->apply) {
+	if ((cfg == this->apply) || (cfg == this->reset)) {
 		this->set_caret_owner(nullptr);
 	}
 
