@@ -15,10 +15,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)device\editor.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)device\gps_cs.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)device\vessel\trailing_suction_dredger.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)device\editor.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)device\gps_cs.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)device\vessel\trailing_suction_dredger.hpp" />
   </ItemGroup>
   <ItemGroup>

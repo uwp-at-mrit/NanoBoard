@@ -17,8 +17,8 @@ namespace WarGrey::SCADA {
 		IGraphlet* thumbnail_graphlet() override;
 
 	protected:
-		void on_apply() override;
-		void on_reset() override;
+		bool on_apply() override;
+		bool on_reset() override;
 		bool on_edit(WarGrey::SCADA::Dimensionlet* dim) override;
 
 	private:

@@ -194,7 +194,7 @@ namespace {
 private class WarGrey::SCADA::TrailingSuctionDredgerSelf {
 public:
 	TrailingSuctionDredgerSelf(TrailingSuctionDredgerPlanet* master, Platform::String^ vessel)
-		: master(master), label_max_width(0.0F), vessel(vessel), up_to_date(true), entity(nullptr) {
+		: master(master), label_max_width(0.0F), vessel(vessel), entity(nullptr) {
 		this->input_style = make_highlight_dimension_style(label_font->FontSize, 7U, 1U);
 		this->input_style.unit_color = label_color;
 	}
@@ -258,7 +258,6 @@ public:
 		if (modified) {
 			dim->set_value(new_value);
 
-			this->up_to_date = false;
 			this->refresh_entity();
 
 			this->dredger->moor(GraphletAnchor::RB);
@@ -269,19 +268,22 @@ public:
 		return modified;
 	}
 
-	void on_apply() {
+	bool on_apply() {
 		this->refresh_entity();
 		this->dredger->refresh(this->entity);
+
+		return true;
 	}
 
-	void on_reset() {
+	bool on_reset() {
 		if (this->dredger != nullptr) {
 			this->dredger->preview(nullptr);
-			this->dredger->notify_updated();
-
+			
 			this->entity = this->dredger->clone_vessel(this->entity, true);
 			this->refresh_input_fields();
 		}
+
+		return true;
 	}
 
 public:
@@ -295,8 +297,8 @@ private:
 			this->entity = ref new TrailingSuctionDredger();
 		}
 
-		if (!this->up_to_date) {
-			this->up_to_date = true;
+		if (!this->master->up_to_date()) {
+			this->master->begin_update_sequence();
 
 			Vessel_Refresh_Vertex(this->entity, gps[0], this->xs, this->ys, TSD::GPS1);
 			Vessel_Refresh_Vertex(this->entity, gps[1], this->xs, this->ys, TSD::GPS2);
@@ -328,13 +330,14 @@ private:
 			Vessel_Refresh_Vertex(this->entity, bridge_vertexes[7], this->xs, this->ys, TSD::Bridge8);
 			Vessel_Refresh_Vertex(this->entity, bridge_vertexes[8], this->xs, this->ys, TSD::Bridge9);
 			Vessel_Refresh_Vertex(this->entity, bridge_vertexes[9], this->xs, this->ys, TSD::Bridge10);
+
+			this->master->notify_updated();
+			this->master->end_update_sequence();
 		}
 	}
 
 	void refresh_input_fields() {
 		if (this->entity != nullptr) {
-			this->up_to_date = true;
-
 			this->master->begin_update_sequence();
 
 			Vessel_Display_Vertex(this->entity, gps[0], this->xs, this->ys, TSD::GPS1);
@@ -368,6 +371,7 @@ private:
 			Vessel_Display_Vertex(this->entity, bridge_vertexes[8], this->xs, this->ys, TSD::Bridge9);
 			Vessel_Display_Vertex(this->entity, bridge_vertexes[9], this->xs, this->ys, TSD::Bridge10);
 
+			this->master->notify_updated();
 			this->master->end_update_sequence();
 		}
 	}
@@ -415,7 +419,6 @@ private:
 	DimensionStyle input_style;
 	TrailingSuctionDredger^ entity;
 	Platform::String^ vessel;
-	bool up_to_date;
 
 private: // never delete these graphlet manually
 	TrailingSuctionDredgerlet* dredger;
@@ -465,12 +468,12 @@ IGraphlet* TrailingSuctionDredgerPlanet::thumbnail_graphlet() {
 	return this->self->thumbnail();
 }
 
-void TrailingSuctionDredgerPlanet::on_apply() {
-	this->self->on_apply();
+bool TrailingSuctionDredgerPlanet::on_apply() {
+	return this->self->on_apply();
 }
 
-void TrailingSuctionDredgerPlanet::on_reset() {
-	this->self->on_reset();
+bool TrailingSuctionDredgerPlanet::on_reset() {
+	return this->self->on_reset();
 }
 
 bool TrailingSuctionDredgerPlanet::on_edit(Dimensionlet* dim) {

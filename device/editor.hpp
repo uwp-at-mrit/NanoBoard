@@ -21,14 +21,16 @@ namespace WarGrey::SCADA {
 		bool on_key(Windows::System::VirtualKey key, bool wargrey_keyboard) override;
 		void on_focus(IGraphlet* g, bool yes) override;
 
-	protected:
-		virtual void on_apply() = 0;
-		virtual void on_reset() = 0;
-		virtual bool on_discard() { return true; }
-		virtual bool on_edit(WarGrey::SCADA::Dimensionlet* dim) { return true; }
+	public:
+		void notify_modification();
+		void notify_updated();
+		bool up_to_date();
 
 	protected:
-		void notify_modification();
+		virtual bool on_apply() = 0;
+		virtual bool on_reset() = 0;
+		virtual bool on_discard() { return true; }
+		virtual bool on_edit(WarGrey::SCADA::Dimensionlet* dim) { return true; }
 
 	protected: // never delete these graphlets manually
 		WarGrey::SCADA::Labellet* caption;

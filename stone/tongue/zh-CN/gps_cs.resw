@@ -117,94 +117,46 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Barge" xml:space="preserve">
-    <value>边抛</value>
+  <data name="a" xml:space="preserve">
+    <value>椭球半径</value>
   </data>
-  <data name="Body1" xml:space="preserve">
-    <value>船体1点</value>
+  <data name="CM" xml:space="preserve">
+    <value>中央子午线</value>
   </data>
-  <data name="Body2" xml:space="preserve">
-    <value>船体2点</value>
+  <data name="Dx" xml:space="preserve">
+    <value>X 修正</value>
   </data>
-  <data name="Body3" xml:space="preserve">
-    <value>船体3点</value>
+  <data name="Dy" xml:space="preserve">
+    <value>Y 修正</value>
   </data>
-  <data name="Body4" xml:space="preserve">
-    <value>船体4点</value>
+  <data name="Dz" xml:space="preserve">
+    <value>Z 修正</value>
   </data>
-  <data name="Body5" xml:space="preserve">
-    <value>船体5点</value>
+  <data name="f" xml:space="preserve">
+    <value>椭球扁率</value>
   </data>
-  <data name="Body6" xml:space="preserve">
-    <value>船体6点</value>
+  <data name="Rx" xml:space="preserve">
+    <value>GPS 转换参数 -- Rx</value>
   </data>
-  <data name="Body7" xml:space="preserve">
-    <value>船体7点</value>
+  <data name="Ry" xml:space="preserve">
+    <value>GPS 转换参数 -- Ry</value>
   </data>
-  <data name="Bridge1" xml:space="preserve">
-    <value>驾驶室1点</value>
+  <data name="Rz" xml:space="preserve">
+    <value>GPS 转换参数 -- Rz</value>
   </data>
-  <data name="Bridge10" xml:space="preserve">
-    <value>驾驶室10点</value>
+  <data name="S" xml:space="preserve">
+    <value>GPS 转换参数 --   S</value>
   </data>
-  <data name="Bridge2" xml:space="preserve">
-    <value>驾驶室2点</value>
+  <data name="Tx" xml:space="preserve">
+    <value>GPS 转换参数 -- Tx</value>
   </data>
-  <data name="Bridge3" xml:space="preserve">
-    <value>驾驶室3点</value>
+  <data name="Ty" xml:space="preserve">
+    <value>GPS 转换参数 -- Ty</value>
   </data>
-  <data name="Bridge4" xml:space="preserve">
-    <value>驾驶室4点</value>
+  <data name="Tz" xml:space="preserve">
+    <value>GPS 转换参数 -- Tz</value>
   </data>
-  <data name="Bridge5" xml:space="preserve">
-    <value>驾驶室5点</value>
-  </data>
-  <data name="Bridge6" xml:space="preserve">
-    <value>驾驶室6点</value>
-  </data>
-  <data name="Bridge7" xml:space="preserve">
-    <value>驾驶室7点</value>
-  </data>
-  <data name="Bridge8" xml:space="preserve">
-    <value>驾驶室8点</value>
-  </data>
-  <data name="Bridge9" xml:space="preserve">
-    <value>驾驶室9点</value>
-  </data>
-  <data name="GPS1" xml:space="preserve">
-    <value>GPS1</value>
-  </data>
-  <data name="GPS2" xml:space="preserve">
-    <value>GPS2</value>
-  </data>
-  <data name="Hopper1" xml:space="preserve">
-    <value>泥舱1点</value>
-  </data>
-  <data name="Hopper2" xml:space="preserve">
-    <value>泥舱2点</value>
-  </data>
-  <data name="Hopper3" xml:space="preserve">
-    <value>泥舱3点</value>
-  </data>
-  <data name="Hopper4" xml:space="preserve">
-    <value>泥舱4点</value>
-  </data>
-  <data name="origin" xml:space="preserve">
-    <value>O</value>
-  </data>
-  <data name="PS_Suction" xml:space="preserve">
-    <value>左吸口</value>
-  </data>
-  <data name="SB_Suction" xml:space="preserve">
-    <value>右吸口</value>
-  </data>
-  <data name="Trunnion" xml:space="preserve">
-    <value>耳轴</value>
-  </data>
-  <data name="x" xml:space="preserve">
-    <value>X</value>
-  </data>
-  <data name="y" xml:space="preserve">
-    <value>Y</value>
+  <data name="UTM_S" xml:space="preserve">
+    <value>投影比例</value>
   </data>
 </root>

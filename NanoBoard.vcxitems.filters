@@ -27,6 +27,9 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)device\vessel\trailing_suction_dredger.cpp">
       <Filter>device\vessel</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)device\gps_cs.cpp">
+      <Filter>device</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)device\editor.hpp">
@@ -34,6 +37,9 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)device\vessel\trailing_suction_dredger.hpp">
       <Filter>device\vessel</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)device\gps_cs.hpp">
+      <Filter>device</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

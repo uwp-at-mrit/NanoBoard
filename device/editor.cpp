@@ -33,7 +33,7 @@ void EditorPlanet::load(Microsoft::Graphics::Canvas::UI::CanvasCreateResourcesRe
 	this->insert(this->apply);
 	
 	this->discard = this->insert_one(new Buttonlet(ButtonState::Ready, "_Discard"));
-	this->reset = this->insert_one(new Buttonlet(ButtonState::Ready, "_Reset"));
+	this->reset = this->insert_one(new Buttonlet(ButtonState::Disabled, "_Reset"));
 }
 
 void EditorPlanet::reflow(float width, float height) {
@@ -96,17 +96,21 @@ void EditorPlanet::on_focus(IGraphlet* g, bool yes) {
 
 void EditorPlanet::on_tap_selected(IGraphlet* g, float local_x, float local_y) {
 	if (this->apply == g) {
-		this->on_apply();
-		this->apply->set_state(ButtonState::Disabled);
+		if (this->on_apply()) {
+			this->notify_updated();
+		}
 	} else if (this->reset == g) {
-		this->on_reset();
+		if (this->on_reset()) {
+			this->notify_updated();
+		}
 	} else if (this->discard == g) {
 		if (this->on_discard()) {
 			auto flyout = FlyoutBase::GetAttachedFlyout(g->info->master->master()->display()->canvas);
 
-			if (this->apply->get_state() != ButtonState::Disabled) {
-				this->on_reset();
-				this->apply->set_state(ButtonState::Disabled);
+			if (!this->up_to_date()) {
+				if (this->on_reset()) {
+					this->notify_updated();
+				}
 			}
 
 			if (flyout != nullptr) {
@@ -117,5 +121,27 @@ void EditorPlanet::on_tap_selected(IGraphlet* g, float local_x, float local_y) {
 }
 
 void EditorPlanet::notify_modification() {
+	this->begin_update_sequence();
+
 	this->apply->set_state(ButtonState::Ready);
+	this->reset->set_state(ButtonState::Ready);
+
+	this->end_update_sequence();
+}
+
+void EditorPlanet::notify_updated() {
+	this->begin_update_sequence();
+
+	if (this->get_focus_graphlet() == this->apply) {
+		this->set_caret_owner(nullptr);
+	}
+
+	this->apply->set_state(ButtonState::Disabled);
+	this->reset->set_state(ButtonState::Disabled);
+
+	this->end_update_sequence();
+}
+
+bool EditorPlanet::up_to_date() {
+	return (this->apply->get_state() == ButtonState::Disabled);
 }

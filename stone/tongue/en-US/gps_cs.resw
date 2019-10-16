@@ -117,94 +117,46 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Barge" xml:space="preserve">
-    <value>Barge</value>
+  <data name="a" xml:space="preserve">
+    <value>Ellipsoid Axis</value>
   </data>
-  <data name="Body1" xml:space="preserve">
-    <value>Body1</value>
+  <data name="CM" xml:space="preserve">
+    <value>Center Meridian</value>
   </data>
-  <data name="Body2" xml:space="preserve">
-    <value>Body2</value>
+  <data name="Dx" xml:space="preserve">
+    <value>GP dx</value>
   </data>
-  <data name="Body3" xml:space="preserve">
-    <value>Body3</value>
+  <data name="Dy" xml:space="preserve">
+    <value>GP dy</value>
   </data>
-  <data name="Body4" xml:space="preserve">
-    <value>Body4</value>
+  <data name="Dz" xml:space="preserve">
+    <value>GP dz</value>
   </data>
-  <data name="Body5" xml:space="preserve">
-    <value>Body5</value>
+  <data name="f" xml:space="preserve">
+    <value>Ellipsoid Flatness</value>
   </data>
-  <data name="Body6" xml:space="preserve">
-    <value>Body6</value>
+  <data name="Rx" xml:space="preserve">
+    <value>CS Rx</value>
   </data>
-  <data name="Body7" xml:space="preserve">
-    <value>Body7</value>
+  <data name="Ry" xml:space="preserve">
+    <value>CS Ry</value>
   </data>
-  <data name="Bridge1" xml:space="preserve">
-    <value>Bridge1</value>
+  <data name="Rz" xml:space="preserve">
+    <value>CS Rz</value>
   </data>
-  <data name="Bridge10" xml:space="preserve">
-    <value>Bridge10</value>
+  <data name="S" xml:space="preserve">
+    <value>CS Scale</value>
   </data>
-  <data name="Bridge2" xml:space="preserve">
-    <value>Bridge2</value>
+  <data name="Tx" xml:space="preserve">
+    <value>CS Tx</value>
   </data>
-  <data name="Bridge3" xml:space="preserve">
-    <value>Bridge3</value>
+  <data name="Ty" xml:space="preserve">
+    <value>CS Ty</value>
   </data>
-  <data name="Bridge4" xml:space="preserve">
-    <value>Bridge4</value>
+  <data name="Tz" xml:space="preserve">
+    <value>CS Tz</value>
   </data>
-  <data name="Bridge5" xml:space="preserve">
-    <value>Bridge5</value>
-  </data>
-  <data name="Bridge6" xml:space="preserve">
-    <value>Bridge6</value>
-  </data>
-  <data name="Bridge7" xml:space="preserve">
-    <value>Bridge7</value>
-  </data>
-  <data name="Bridge8" xml:space="preserve">
-    <value>Bridge8</value>
-  </data>
-  <data name="Bridge9" xml:space="preserve">
-    <value>Bridge9</value>
-  </data>
-  <data name="GPS1" xml:space="preserve">
-    <value>GPS1</value>
-  </data>
-  <data name="GPS2" xml:space="preserve">
-    <value>GPS2</value>
-  </data>
-  <data name="Hopper1" xml:space="preserve">
-    <value>Hopper1</value>
-  </data>
-  <data name="Hopper2" xml:space="preserve">
-    <value>Hopper2</value>
-  </data>
-  <data name="Hopper3" xml:space="preserve">
-    <value>Hopper3</value>
-  </data>
-  <data name="Hopper4" xml:space="preserve">
-    <value>Hopper4</value>
-  </data>
-  <data name="origin" xml:space="preserve">
-    <value>O</value>
-  </data>
-  <data name="PS_Suction" xml:space="preserve">
-    <value>PS Suction</value>
-  </data>
-  <data name="SB_Suction" xml:space="preserve">
-    <value>SB Suction</value>
-  </data>
-  <data name="Trunnion" xml:space="preserve">
-    <value>Trunion</value>
-  </data>
-  <data name="x" xml:space="preserve">
-    <value>X</value>
-  </data>
-  <data name="y" xml:space="preserve">
-    <value>Y</value>
+  <data name="UTM_S" xml:space="preserve">
+    <value>GP Scale</value>
   </data>
 </root>
