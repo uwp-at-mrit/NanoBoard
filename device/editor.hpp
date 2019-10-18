@@ -2,9 +2,10 @@
 
 #include "planet.hpp"
 
-#include "graphlet/textlet.hpp"
+#include "graphlet/ui/textlet.hpp"
+#include "graphlet/ui/buttonlet.hpp"
+
 #include "graphlet/shapelet.hpp"
-#include "graphlet/buttonlet.hpp"
 
 namespace WarGrey::SCADA {
 	private class EditorPlanet : public WarGrey::SCADA::Planet {

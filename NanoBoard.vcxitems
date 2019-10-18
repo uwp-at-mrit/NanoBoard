@@ -17,16 +17,20 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)device\editor.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)device\gps_cs.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)device\vessel\trailing_suction_dredger.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)preference\colorplot.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)device\editor.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)device\gps_cs.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)device\vessel\trailing_suction_dredger.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)preference\colorplot.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <PRIResource Include="$(MSBuildThisFileDirectory)stone\tongue\en-US\colorplot.resw" />
     <PRIResource Include="$(MSBuildThisFileDirectory)stone\tongue\en-US\gps_cs.resw" />
     <PRIResource Include="$(MSBuildThisFileDirectory)stone\tongue\en-US\tongue.resw" />
     <PRIResource Include="$(MSBuildThisFileDirectory)stone\tongue\en-US\trailing_suction_dredger.resw" />
+    <PRIResource Include="$(MSBuildThisFileDirectory)stone\tongue\zh-CN\colorplot.resw" />
     <PRIResource Include="$(MSBuildThisFileDirectory)stone\tongue\zh-CN\gps_cs.resw" />
     <PRIResource Include="$(MSBuildThisFileDirectory)stone\tongue\zh-CN\tongue.resw" />
     <PRIResource Include="$(MSBuildThisFileDirectory)stone\tongue\zh-CN\trailing_suction_dredger.resw" />
