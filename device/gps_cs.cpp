@@ -3,7 +3,6 @@
 #include "device/gps_cs.hpp"
 
 #include "graphlet/shapelet.hpp"
-#include "graphlet/planetlet.hpp"
 
 #include "module.hpp"
 
@@ -280,14 +279,14 @@ private:
 
 	void reflow_parameter_fields(IGraphlet* frame, float xoff, GCS id0, GCS idp1, float gapsize, float pheight, GCS sep) {
 		float idx0 = _F(id0);
-		float yoff0 = gapsize * 0.5F;
+		float yoff0 = gapsize;
 		float hgap = gapsize * 0.618F;
 
 		for (GCS id = id0; id < idp1; id++) {
 			float yrow = (pheight + gapsize) * (_F(id) - idx0);
 
 			if (id == sep) { // add a blank before `sep`
-				yoff0 = gapsize;
+				yoff0 = gapsize * 2.0F;
 			}
 
 			this->master->move_to(this->ps[id], frame, GraphletAnchor::LT, GraphletAnchor::LT, xoff + hgap, yrow + gapsize + yoff0);

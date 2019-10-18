@@ -1,10 +1,6 @@
 #pragma once
 
-#include "device/editor.hpp"
-
-#include "graphlet/filesystem/gpslet.hpp"
-
-#include "cs/wgs_xy.hpp"
+#include "editor.hpp"
 
 namespace WarGrey::SCADA {
 	class ColorPlotSelf;
@@ -12,7 +8,7 @@ namespace WarGrey::SCADA {
 	private class ColorPlotPlanet : public WarGrey::SCADA::EditorPlanet {
 	public:
 		virtual ~ColorPlotPlanet() noexcept;
-		ColorPlotPlanet(Platform::String^ default_gps = "colorplot");
+		ColorPlotPlanet(Platform::String^ default_plot = "colorplot");
 
 	public:
 		void load(Microsoft::Graphics::Canvas::UI::CanvasCreateResourcesReason reason, float width, float height) override;
@@ -23,6 +19,7 @@ namespace WarGrey::SCADA {
 	protected:
 		bool on_apply() override;
 		bool on_reset() override;
+		bool on_default() override;
 		bool on_edit(WarGrey::SCADA::Dimensionlet* dim) override;
 
 	private:

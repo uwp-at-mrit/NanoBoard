@@ -1,8 +1,8 @@
 #pragma once
 
-#include "device/editor.hpp"
+#include "editor.hpp"
 
-#include "graphlet/filesystem/gpslet.hpp"
+#include "graphlet/filesystem/configuration/gpslet.hpp"
 
 #include "cs/wgs_xy.hpp"
 

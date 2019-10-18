@@ -2,7 +2,7 @@
 
 #include "device/vessel/trailing_suction_dredger.hpp"
 
-#include "graphlet/filesystem/vessel/trailing_suction_dredgerlet.hpp"
+#include "graphlet/filesystem/configuration/vessel/trailing_suction_dredgerlet.hpp"
 #include "graphlet/shapelet.hpp"
 #include "graphlet/planetlet.hpp"
 

@@ -23,6 +23,7 @@ namespace WarGrey::SCADA {
 		void on_focus(IGraphlet* g, bool yes) override;
 
 	public:
+		void enable_default(bool on_off);
 		void notify_modification();
 		void notify_updated();
 		bool up_to_date();
@@ -32,12 +33,14 @@ namespace WarGrey::SCADA {
 		virtual bool on_reset() = 0;
 		virtual bool on_edit(WarGrey::SCADA::Dimensionlet* dim) = 0;
 		virtual bool on_discard() { return true; }
+		virtual bool on_default() { return false; }
 
 	protected: // never delete these graphlets manually
 		WarGrey::SCADA::Labellet* caption;
 		WarGrey::SCADA::Buttonlet* apply;
 		WarGrey::SCADA::Buttonlet* reset;
 		WarGrey::SCADA::Buttonlet* discard;
+		WarGrey::SCADA::Buttonlet* default;
 		WarGrey::SCADA::Shapelet* background;
 	};
 }

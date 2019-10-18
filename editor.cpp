@@ -1,4 +1,6 @@
-#include "device/editor.hpp"
+#include "editor.hpp"
+
+#include "graphlet/ui/colorpickerlet.hpp"
 
 using namespace WarGrey::SCADA;
 
@@ -34,6 +36,7 @@ void EditorPlanet::load(Microsoft::Graphics::Canvas::UI::CanvasCreateResourcesRe
 	
 	this->discard = this->insert_one(new Buttonlet(ButtonState::Ready, "_Discard"));
 	this->reset = this->insert_one(new Buttonlet(ButtonState::Disabled, "_Reset"));
+	this->default = this->insert_one(new Buttonlet(ButtonState::Disabled, "_Default"));
 }
 
 void EditorPlanet::reflow(float width, float height) {
@@ -49,14 +52,17 @@ void EditorPlanet::reflow(float width, float height) {
 	this->move_to(this->discard, this->background, GraphletAnchor::RB, GraphletAnchor::RT, 0.0F, vinset);
 	this->move_to(this->apply, this->discard, GraphletAnchor::LC, GraphletAnchor::RC, -vinset * 0.5F);
 	this->move_to(this->reset, this->apply, GraphletAnchor::LC, GraphletAnchor::RC, -vinset * 1.5F);
+	this->move_to(this->default, this->reset, GraphletAnchor::LC, GraphletAnchor::RC, -vinset * 0.5F);
 }
 
 bool EditorPlanet::can_select(WarGrey::SCADA::IGraphlet* g) {
 	Buttonlet* b = dynamic_cast<Buttonlet*>(g);
 	IEditorlet* t = dynamic_cast<IEditorlet*>(g);
+	ColorPickerlet* p = dynamic_cast<ColorPickerlet*>(g);
 
 	return ((b != nullptr) && (b->get_state() != ButtonState::Disabled))
-		|| ((t != nullptr) && (t->get_state() == DimensionState::Input));
+		|| ((t != nullptr) && (t->get_state() == DimensionState::Input))
+		|| (p != nullptr);
 }
 
 bool EditorPlanet::on_key(VirtualKey key, bool wargrey_keyboard) {
@@ -117,7 +123,15 @@ void EditorPlanet::on_tap_selected(IGraphlet* g, float local_x, float local_y) {
 				flyout->Hide();
 			}
 		}
+	} else if (this->default == g) {
+		if (this->on_default()) {
+			this->notify_modification();
+		}
 	}
+}
+
+void EditorPlanet::enable_default(bool on_off) {
+	this->default->set_state(on_off ? ButtonState::Ready : ButtonState::Disabled);
 }
 
 void EditorPlanet::notify_modification() {

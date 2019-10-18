@@ -1,6 +1,6 @@
 #pragma once
 
-#include "device/editor.hpp"
+#include "editor.hpp"
 
 namespace WarGrey::SCADA {
 	class TrailingSuctionDredgerSelf;

@@ -1,6 +1,7 @@
-#include <map>
-
 #include "preference/colorplot.hpp"
+
+#include "graphlet/filesystem/configuration/colorplotlet.hpp"
+#include "graphlet/ui/colorpickerlet.hpp"
 
 #include "graphlet/shapelet.hpp"
 #include "graphlet/planetlet.hpp"
@@ -18,123 +19,64 @@ using namespace Microsoft::Graphics::Canvas::Brushes;
 static CanvasTextFormat^ label_font = make_bold_text_format("Microsoft Yahei", 16.0F);
 
 static CanvasSolidColorBrush^ label_color = Colours::DarkGray;
-static CanvasSolidColorBrush^ region_border_color = Colours::DimGray;
-
-#define GPS_Display_Vertex(v, ref, vs, id) vs[id]->set_value(v->parameter.ref)
-#define GPS_Refresh_Vertex(v, ref, vs, id) v->parameter.ref = vs[id]->get_value()
 
 /*************************************************************************************************/
 namespace {
 	// order matters
-	private enum class GCS {
-		// Ellipsoid
-		a, f, CM,
-
-		// Cartographic coordinate reference system 
-		Tx, Ty, Tz, S, Rx, Ry, Rz,
-
-		// Gauss-Krüger projection
-		Dx, Dy, Dz, UTM_S,
-
-		_,
-
-		// testcase
-		B, L, H, X, Y, Z, 
-
-		__
+	private enum class CP {
+		min, max,
+		_
 	};
 }
 
 private class WarGrey::SCADA::ColorPlotSelf {
 public:
-	ColorPlotSelf(ColorPlotPlanet* master, Platform::String^ gps) : master(master), label_max_width(0.0F), entity(nullptr) {
-		this->parameter_style = make_highlight_dimension_style(label_font->FontSize, 16U);
-		this->parameter_style.unit_color = Colours::Transparent;
+	ColorPlotSelf(ColorPlotPlanet* master, Platform::String^ plot) : master(master), label_max_width(0.0F), entity(nullptr) {
+		this->depth_style = make_highlight_dimension_style(label_font->FontSize, 3U, 6U, 2, label_color, Colours::Transparent);
+		this->depth_style.label_xfraction = 2.0F / 3.0F;
+		this->depth_style.unit_color = this->depth_style.label_color;
 
-		this->input_style = make_highlight_dimension_style(label_font->FontSize, 12U);
-		this->input_style.unit_color = Colours::Transparent;
-
-		this->output_style = this->input_style;
-		this->output_style.label_color = label_color;
-		this->output_style.number_color = this->output_style.label_color;
-		this->output_style.number_background_color = Colours::Transparent;
-		this->output_style.label_background_color = Colours::Transparent;
-		this->output_style.number_xfraction = 0.0F;
-
-		this->gps = new GPSlet(gps, 128.0F);
+		this->plot = new ColorPlotlet(plot, 256.0F);
 	}
 
 public:
 	void load(CanvasCreateResourcesReason reason, float width, float height, float inset) {
-		for (GCS id = _E0(GCS); id < GCS::_; id++) {
-			int precision = -1;
+		float depth_width, depth_height;
 
-			switch (id) {
-			case GCS::a: case GCS::f: case GCS::CM: precision = 2; break;
-			case GCS::Tx: case GCS::Ty: case GCS::Tz: precision = 5; break;
-			case GCS::Rx: case GCS::Ry: case GCS::Rz: precision = 5; break;
-			case GCS::Dx: case GCS::Dy: case GCS::Dz: precision = 2; break;
-			case GCS::S: case GCS::UTM_S: precision = 2; break;
-			}
+		for (int idx = 0; idx < ColorPlotSize; idx++) {
+			auto dim = new Credit<Dimensionlet, int>(DimensionState::Input, this->depth_style, "meter", (idx + 1).ToString());
 
-			this->labels[id] = this->insert_label(id);
-			this->ps[id] = this->insert_parameter_field(id, precision);
+			dim->fill_extent(0.0F, 0.0F, &depth_width, &depth_height);
+
+			this->depths[idx] = this->master->insert_one(dim, idx);
+			this->pickers[idx] = this->master->insert_one(new Credit<ColorPickerlet, int>(Palette::Xterm256, depth_width, depth_height), idx);
 		}
 
-		this->load_test_field(GCS::B, 3117.6797, 4);
-		this->load_test_field(GCS::L, 12147.5565, 4);
-		this->load_test_field(GCS::H, 30.0, 2);
-
-		this->load_test_field(GCS::X, 3464324.75, 2);
-		this->load_test_field(GCS::Y, 384959.47, 2);
-		this->load_test_field(GCS::Z, 30.0, 2);
-
-		{ // load regions
-			float rcorner = inset * 0.25F;
-			float gapsize = inset * 0.618F;
-			float rwidth, rheight;
-
-			this->is[GCS::B]->fill_extent(0.0F, 0.0F, &rwidth, &rheight);
-			rwidth = (rwidth + gapsize) * 2.0F;
-			rheight = (rheight + gapsize) * 3.0F + gapsize;
-
-			this->regions[GCS::B] = this->master->insert_one(new RoundedRectanglet(rwidth, rheight, rcorner, nullptr, region_border_color));
-			this->regions[GCS::X] = this->master->insert_one(new RoundedRectanglet(rwidth, rheight, rcorner, nullptr, region_border_color));
-		}
-
-		this->master->insert(this->gps);
-		this->gps->set_north(-45.0);
-
-		for (auto it = this->regions.begin(); it != this->regions.end(); it++) {
-			it->second->camouflage(true);
-		}
+		this->master->insert_one(this->plot);
 	}
 
 	void reflow(IGraphlet* frame, float width, float height, float inset) {
-		float xoff = inset + this->label_max_width;
-		float pheight, iheight;
+		float depth_width, depth_height, picker_width, picker_height;
+		int sep = ColorPlotSize / 2;
 
-		this->ps[GCS::a]->fill_extent(0.0F, 0.0F, nullptr, &pheight);
-		this->is[GCS::B]->fill_extent(0.0F, 0.0F, nullptr, &iheight);
+		this->depths[0]->fill_extent(0.0F, 0.0F, &depth_width, &depth_height);
+		this->pickers[0]->fill_extent(0.0F, 0.0F, &picker_width, &picker_height);
 
-		this->reflow_parameter_fields(frame, xoff, _E0(GCS), GCS::_, inset, pheight, GCS::Tx);
-		this->master->move_to(this->regions[GCS::X], frame, GraphletAnchor::RB, GraphletAnchor::RB, -inset, -inset);
-		this->master->move_to(this->regions[GCS::B], this->regions[GCS::X], GraphletAnchor::CT, GraphletAnchor::CB, 0.0F, -inset);
-		this->reflow_test_fields(GCS::B, GCS::H, GCS::X, GCS::Z, inset, iheight);
-		this->reflow_test_fields(GCS::X, GCS::Z, GCS::B, GCS::H, inset, iheight);
+		this->reflow_depths_fields(frame, inset, 0, sep, inset, flmax(depth_height, picker_height));
+		this->reflow_depths_fields(frame, inset * 4.0F + depth_width + picker_width, sep, ColorPlotSize, inset, flmax(depth_height, picker_height));
 
-		this->master->move_to(this->gps, this->regions[GCS::B], 0.5F, frame, 0.0F, GraphletAnchor::CT, 0.0F, inset);
+		this->master->move_to(this->plot, frame, GraphletAnchor::RT, GraphletAnchor::RT, -inset, inset);
 	}
 
 	void on_graphlet_ready(IGraphlet* g) {
-		if (this->gps == g) {
-			this->entity = this->gps->clone_gpscs(this->entity);
-			this->refresh_parameter_fields();
+		if (this->plot == g) {
+			this->entity = this->plot->clone_plot(this->entity);
+			this->refresh_preference_fields();
 		}
 	}
 
 public:
-	bool on_edit(Credit<Dimensionlet, GCS>* dim) {
+	bool on_edit(Credit<Dimensionlet, int>* dim) {
 		long double new_value = dim->get_input_number();
 		bool modified = (new_value != dim->get_value());
 
@@ -144,76 +86,86 @@ public:
 			this->refresh_entity();
 		}
 
-		return modified && (dim->id < GCS::_);
+		return modified;
 	}
 
 	bool on_apply() {
 		this->refresh_entity(); // duplicate work
-		this->gps->refresh(this->entity);
+		this->plot->refresh(this->entity);
 
 		return true;
 	}
 
 	bool on_reset() {
-		if (this->gps != nullptr) {
+		if (this->plot != nullptr) {
 			if (!this->master->up_to_date()) {
-				this->entity = this->gps->clone_gpscs(this->entity);
-				this->refresh_parameter_fields();
+				this->entity = this->plot->clone_plot(this->entity);
+				this->refresh_preference_fields();
 			}
 		}
 
 		return true;
 	}
 
+	bool on_default() {
+		if (this->entity == nullptr) {
+			this->entity = ref new ColorPlot();
+		}
+
+		for (unsigned int idx = 0; idx < ColorPlotSize; idx++) {
+			this->depths[idx]->set_value(double(idx + 1));
+		}
+
+		this->pickers[0]->color(Colours::make(255U, 255U, 128U));
+		this->pickers[1]->color(Colours::make(255U, 255U, 64U));
+		this->pickers[2]->color(Colours::make(255U, 255U, 17U));
+		this->pickers[3]->color(Colours::make(251U, 251U, 0U));
+		this->pickers[4]->color(Colours::make(232U, 232U, 0U));
+		this->pickers[5]->color(Colours::make(221U, 221U, 0U));
+		this->pickers[6]->color(Colours::make(198U, 198U, 0U));
+		this->pickers[7]->color(Colours::make(145U, 145U, 0U));
+		this->pickers[8]->color(Colours::make(115U, 115U, 0U));
+		this->pickers[9]->color(Colours::make(128U, 255U, 128U));
+		this->pickers[10]->color(Colours::make(85U, 255U, 85U));
+		this->pickers[11]->color(Colours::make(80U, 182U, 92U));
+		this->pickers[12]->color(Colours::make(60U, 255U, 60U));
+		this->pickers[13]->color(Colours::make(2U, 255U, 2U));
+		this->pickers[14]->color(Colours::make(0U, 206U, 0U));
+		this->pickers[15]->color(Colours::make(0U, 168U, 0U));
+		this->pickers[16]->color(Colours::make(0U, 121U, 0U));
+		this->pickers[17]->color(Colours::make(198U, 138U, 128U));
+		this->pickers[18]->color(Colours::make(124U, 68U, 44U));
+		this->pickers[19]->color(Colours::make(98U, 49U, 49U));
+
+		return true;
+	}
+
 public:
 	IGraphlet* thumbnail() {
-		return this->gps;
+		return this->plot;
 	}
 
 private:
 	void refresh_entity() {
 		if (this->entity == nullptr) {
-			this->entity = ref new GPSCS();
+			this->entity = ref new ColorPlot();
 		}
 
-		GPS_Refresh_Vertex(this->entity, a, this->ps, GCS::a);
-		GPS_Refresh_Vertex(this->entity, f, this->ps, GCS::f);
-		GPS_Refresh_Vertex(this->entity, cm, this->ps, GCS::CM);
-
-		GPS_Refresh_Vertex(this->entity, cs_tx, this->ps, GCS::Tx);
-		GPS_Refresh_Vertex(this->entity, cs_ty, this->ps, GCS::Ty);
-		GPS_Refresh_Vertex(this->entity, cs_tz, this->ps, GCS::Tz);
-		GPS_Refresh_Vertex(this->entity, cs_s, this->ps, GCS::S);
-		GPS_Refresh_Vertex(this->entity, cs_rx, this->ps, GCS::Rx);
-		GPS_Refresh_Vertex(this->entity, cs_ry, this->ps, GCS::Ry);
-		GPS_Refresh_Vertex(this->entity, cs_rz, this->ps, GCS::Rz);
-
-		GPS_Refresh_Vertex(this->entity, gk_dx, this->ps, GCS::Dx);
-		GPS_Refresh_Vertex(this->entity, gk_dy, this->ps, GCS::Dy);
-		GPS_Refresh_Vertex(this->entity, gk_dz, this->ps, GCS::Dz);
-		GPS_Refresh_Vertex(this->entity, utm_s, this->ps, GCS::UTM_S);
+		for (unsigned int idx = 0; idx < ColorPlotSize; idx++) {
+			this->entity->depths[idx] = this->depths[idx]->get_value();
+			this->entity->colors[idx] = this->pickers[idx]->color();
+			this->entity->enableds[idx] = true;
+		}
 	}
 
-	void refresh_parameter_fields() {
+	void refresh_preference_fields() {
 		if (this->entity != nullptr) {
 			this->master->begin_update_sequence();
 
-			GPS_Display_Vertex(this->entity, a, this->ps, GCS::a);
-			GPS_Display_Vertex(this->entity, f, this->ps, GCS::f);
-			GPS_Display_Vertex(this->entity, cm, this->ps, GCS::CM);
-
-			GPS_Display_Vertex(this->entity, cs_tx, this->ps, GCS::Tx);
-			GPS_Display_Vertex(this->entity, cs_ty, this->ps, GCS::Ty);
-			GPS_Display_Vertex(this->entity, cs_tz, this->ps, GCS::Tz);
-			GPS_Display_Vertex(this->entity, cs_s, this->ps, GCS::S);
-			GPS_Display_Vertex(this->entity, cs_rx, this->ps, GCS::Rx);
-			GPS_Display_Vertex(this->entity, cs_ry, this->ps, GCS::Ry);
-			GPS_Display_Vertex(this->entity, cs_rz, this->ps, GCS::Rz);
-
-			GPS_Display_Vertex(this->entity, gk_dx, this->ps, GCS::Dx);
-			GPS_Display_Vertex(this->entity, gk_dy, this->ps, GCS::Dy);
-			GPS_Display_Vertex(this->entity, gk_dz, this->ps, GCS::Dz);
-			GPS_Display_Vertex(this->entity, utm_s, this->ps, GCS::UTM_S);
+			for (unsigned int idx = 0; idx < ColorPlotSize; idx++) {
+				this->depths[idx]->set_value(this->entity->depths[idx]);
+				this->pickers[idx]->color(this->entity->colors[idx]);
+			}
 			
 			this->master->notify_updated();
 			this->master->end_update_sequence();
@@ -221,8 +173,8 @@ private:
 	}
 
 private:
-	Labellet* insert_label(GCS id) {
-		Labellet* label = new Labellet(_speak(id), label_font, label_color);
+	Labellet* insert_label(int idx) {
+		Labellet* label = new Labellet(idx.ToString(), label_font, label_color);
 		float lbl_width;
 
 		label->fill_extent(0.0F, 0.0F, &lbl_width, nullptr);
@@ -230,79 +182,36 @@ private:
 
 		return this->master->insert_one(label);
 	}
-	
-	Credit<Dimensionlet, GCS>* insert_parameter_field(GCS id, int precision) {
-		this->parameter_style.precision = precision;
-		
-		return this->master->insert_one(new Credit<Dimensionlet, GCS>(DimensionState::Input, this->parameter_style, "meter"), id);
-	}
 
-	void load_test_field(GCS id, double v, int precision) {
-		this->input_style.precision = precision;		
-		this->is[id] = this->master->insert_one(new Credit<Dimensionlet, GCS>(DimensionState::Input, this->input_style, "meter", id.ToString()), id);
-		this->is[id]->set_value(v);
-
-		this->output_style.precision = precision;
-		this->os[id] = this->master->insert_one(new Credit<Dimensionlet, GCS>(DimensionState::Default, this->output_style, "meter", id.ToString()), id);
-		this->os[id]->set_value(flnan);
-	}
-
-	void reflow_parameter_fields(IGraphlet* frame, float xoff, GCS id0, GCS idp1, float gapsize, float pheight, GCS sep) {
-		float idx0 = _F(id0);
-		float yoff0 = gapsize * 0.5F;
+	void reflow_depths_fields(IGraphlet* frame, float xoff, int idx0, int idxp1, float gapsize, float pheight) {
 		float hgap = gapsize * 0.618F;
 
-		for (GCS id = id0; id < idp1; id++) {
-			float yrow = (pheight + gapsize) * (_F(id) - idx0);
+		for (int idx = idx0; idx < idxp1; idx++) {
+			float yrow = (pheight + gapsize) * float(idx - idx0);
 
-			if (id == sep) { // add a blank before `sep`
-				yoff0 = gapsize;
-			}
-
-			this->master->move_to(this->ps[id], frame, GraphletAnchor::LT, GraphletAnchor::LT, xoff + hgap, yrow + gapsize + yoff0);
-			this->master->move_to(this->labels[id], this->ps[id], GraphletAnchor::LC, GraphletAnchor::RC, -hgap);
-		}
-	}
-
-	void reflow_test_fields(GCS id0, GCS idn, GCS lbl0, GCS lbln, float inset, float iheight) {
-		float fln = _F(idn) - _F(id0) + 1.0F;
-		float idx_1 = _F(id0) - 1.0F;
-		float rwidth, rheight, vgapsize;
-		GCS lbl = lbl0;
-
-		this->regions[id0]->fill_extent(0.0F, 0.0F, &rwidth, &rheight);
-		vgapsize = (rheight - fln * iheight) / (fln + 1.0F);
-
-		for (GCS id = id0; id <= idn; id++, lbl++) {
-			float yrow_p1 = (iheight + vgapsize) * (_F(id) - idx_1);
-
-			this->master->move_to(this->is[id], this->regions[id0], GraphletAnchor::CT, GraphletAnchor::RB, 0.0F, yrow_p1);
-			this->master->move_to(this->os[lbl], this->is[id], GraphletAnchor::RC, GraphletAnchor::LC, inset);
+			this->master->move_to(this->depths[idx], frame, GraphletAnchor::LT, GraphletAnchor::LT, xoff, yrow + gapsize * 2.0F);
+			this->master->move_to(this->pickers[idx], this->depths[idx], GraphletAnchor::RC, GraphletAnchor::LC, gapsize, 0.0F);
 		}
 	}
 
 private:
 	float label_max_width;
-	DimensionStyle parameter_style;
-	DimensionStyle input_style;
-	DimensionStyle output_style;
-	GPSCS^ entity;
+	DimensionStyle depth_style;
+	ColorPlot^ entity;
 
 private: // never delete these graphlet manually
-	GPSlet* gps;
-	std::map<GCS, Shapelet*> regions;
-	std::map<GCS, Labellet*> labels;
-	std::map<GCS, Credit<Dimensionlet, GCS>*> ps;
-	std::map<GCS, Credit<Dimensionlet, GCS>*> is;
-	std::map<GCS, Credit<Dimensionlet, GCS>*> os;
+	ColorPlotlet* plot;
+	Labellet* labels[ColorPlotSize];
+	Credit<Dimensionlet, int>* depths[ColorPlotSize];
+	Credit<ColorPickerlet, int>* pickers[ColorPlotSize];
 	
 private:
 	ColorPlotPlanet* master;
 };
 
 /*************************************************************************************************/
-ColorPlotPlanet::ColorPlotPlanet(Platform::String^ gps) : EditorPlanet(__MODULE__) {
-	this->self = new ColorPlotSelf(this, gps);
+ColorPlotPlanet::ColorPlotPlanet(Platform::String^ plot) : EditorPlanet(__MODULE__) {
+	this->self = new ColorPlotSelf(this, plot);
 }
 
 ColorPlotPlanet::~ColorPlotPlanet() {
@@ -314,6 +223,7 @@ void ColorPlotPlanet::load(CanvasCreateResourcesReason reason, float width, floa
 
 	EditorPlanet::load(reason, width, height);
 
+	this->enable_default(true);
 	this->background->fill_extent(0.0F, 0.0F, &bg_width, &bg_height);
 	this->self->load(reason, bg_width, bg_height, (width - bg_width) * 0.5F);
 }
@@ -343,6 +253,10 @@ bool ColorPlotPlanet::on_reset() {
 	return this->self->on_reset();
 }
 
+bool ColorPlotPlanet::on_default() {
+	return this->self->on_default();
+}
+
 bool ColorPlotPlanet::on_edit(Dimensionlet* dim) {
-	return this->self->on_edit(static_cast<Credit<Dimensionlet, GCS>*>(dim));
+	return this->self->on_edit(static_cast<Credit<Dimensionlet, int>*>(dim));
 }

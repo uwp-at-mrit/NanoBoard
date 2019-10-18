@@ -117,13 +117,22 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="colorplot" xml:space="preserve">
-    <value>水深与色块</value>
+  <data name="_Apply" xml:space="preserve">
+    <value>Apply</value>
   </data>
-  <data name="gps_cs" xml:space="preserve">
-    <value>GPS 转换参数</value>
+  <data name="_Cancel" xml:space="preserve">
+    <value>Cancel</value>
   </data>
-  <data name="trailing_suction_dredger" xml:space="preserve">
-    <value>耙吸挖泥船型</value>
+  <data name="_Default" xml:space="preserve">
+    <value>Default</value>
+  </data>
+  <data name="_Discard" xml:space="preserve">
+    <value>Discard</value>
+  </data>
+  <data name="_Okay" xml:space="preserve">
+    <value>Okay</value>
+  </data>
+  <data name="_Reset" xml:space="preserve">
+    <value>Reset</value>
   </data>
 </root>
