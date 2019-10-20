@@ -117,46 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="a" xml:space="preserve">
-    <value>椭球半径</value>
+  <data name="max" xml:space="preserve">
+    <value>最大显示水深</value>
   </data>
-  <data name="CM" xml:space="preserve">
-    <value>中央子午线</value>
-  </data>
-  <data name="Dx" xml:space="preserve">
-    <value>X 修正</value>
-  </data>
-  <data name="Dy" xml:space="preserve">
-    <value>Y 修正</value>
-  </data>
-  <data name="Dz" xml:space="preserve">
-    <value>Z 修正</value>
-  </data>
-  <data name="f" xml:space="preserve">
-    <value>椭球扁率</value>
-  </data>
-  <data name="Rx" xml:space="preserve">
-    <value>GPS 转换参数 -- Rx</value>
-  </data>
-  <data name="Ry" xml:space="preserve">
-    <value>GPS 转换参数 -- Ry</value>
-  </data>
-  <data name="Rz" xml:space="preserve">
-    <value>GPS 转换参数 -- Rz</value>
-  </data>
-  <data name="S" xml:space="preserve">
-    <value>GPS 转换参数 --   S</value>
-  </data>
-  <data name="Tx" xml:space="preserve">
-    <value>GPS 转换参数 -- Tx</value>
-  </data>
-  <data name="Ty" xml:space="preserve">
-    <value>GPS 转换参数 -- Ty</value>
-  </data>
-  <data name="Tz" xml:space="preserve">
-    <value>GPS 转换参数 -- Tz</value>
-  </data>
-  <data name="UTM_S" xml:space="preserve">
-    <value>投影比例</value>
+  <data name="min" xml:space="preserve">
+    <value>最小显示水深</value>
   </data>
 </root>

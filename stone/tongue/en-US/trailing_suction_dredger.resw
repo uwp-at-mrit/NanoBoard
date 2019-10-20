@@ -141,6 +141,9 @@
   <data name="Body7" xml:space="preserve">
     <value>Body7</value>
   </data>
+  <data name="bow_deg" xml:space="preserve">
+    <value>Bow Direction</value>
+  </data>
   <data name="Bridge1" xml:space="preserve">
     <value>Bridge1</value>
   </data>

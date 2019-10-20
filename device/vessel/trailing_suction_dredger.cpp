@@ -265,7 +265,7 @@ public:
 			this->dredger->notify_updated();
 		}
 
-		return modified;
+		return (modified && (dim->id < TSD::_));
 	}
 
 	bool on_apply() {

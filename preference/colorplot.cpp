@@ -1,3 +1,5 @@
+#include <map>
+
 #include "preference/colorplot.hpp"
 
 #include "graphlet/filesystem/configuration/colorplotlet.hpp"
@@ -52,20 +54,31 @@ public:
 			this->pickers[idx] = this->master->insert_one(new Credit<ColorPickerlet, int>(Palette::Xterm256, depth_width, depth_height), idx);
 		}
 
+		for (CP id = _E0(CP); id < CP::_; id++) {
+			this->labels[id] = this->insert_label(id);
+			this->ranges[id] = this->master->insert_one(new Credit<Dimensionlet, CP>(DimensionState::Input, this->depth_style, "meter"), id);
+		}
+
 		this->master->insert_one(this->plot);
 	}
 
 	void reflow(IGraphlet* frame, float width, float height, float inset) {
 		float depth_width, depth_height, picker_width, picker_height;
 		int sep = ColorPlotSize / 2;
-
+		
 		this->depths[0]->fill_extent(0.0F, 0.0F, &depth_width, &depth_height);
 		this->pickers[0]->fill_extent(0.0F, 0.0F, &picker_width, &picker_height);
 
 		this->reflow_depths_fields(frame, inset, 0, sep, inset, flmax(depth_height, picker_height));
 		this->reflow_depths_fields(frame, inset * 4.0F + depth_width + picker_width, sep, ColorPlotSize, inset, flmax(depth_height, picker_height));
 
-		this->master->move_to(this->plot, frame, GraphletAnchor::RT, GraphletAnchor::RT, -inset, inset);
+		this->master->move_to(this->plot, frame, GraphletAnchor::RT, GraphletAnchor::RT, -inset * 2.0F, inset * 2.0F);
+		this->master->move_to(this->ranges[CP::min], this->plot, GraphletAnchor::RB, GraphletAnchor::RT, 0.0F, inset * 4.0F);
+		this->master->move_to(this->ranges[CP::max], this->ranges[CP::min], GraphletAnchor::RB, GraphletAnchor::RT, 0.0F, inset * 0.5F);
+
+		for (CP id = _E0(CP); id < CP::_; id++) {
+			this->master->move_to(this->labels[id], this->ranges[id], GraphletAnchor::LC, GraphletAnchor::RC, -inset * 0.618F);
+		}
 	}
 
 	void on_graphlet_ready(IGraphlet* g) {
@@ -76,7 +89,7 @@ public:
 	}
 
 public:
-	bool on_edit(Credit<Dimensionlet, int>* dim) {
+	bool on_edit(Dimensionlet* dim) {
 		long double new_value = dim->get_input_number();
 		bool modified = (new_value != dim->get_value());
 
@@ -156,6 +169,9 @@ private:
 			this->entity->colors[idx] = this->pickers[idx]->color();
 			this->entity->enableds[idx] = true;
 		}
+
+		this->entity->min_depth = this->ranges[CP::min]->get_value();
+		this->entity->max_depth = this->ranges[CP::max]->get_value();
 	}
 
 	void refresh_preference_fields() {
@@ -166,6 +182,9 @@ private:
 				this->depths[idx]->set_value(this->entity->depths[idx]);
 				this->pickers[idx]->color(this->entity->colors[idx]);
 			}
+
+			this->ranges[CP::min]->set_value(this->entity->min_depth);
+			this->ranges[CP::max]->set_value(this->entity->max_depth);
 			
 			this->master->notify_updated();
 			this->master->end_update_sequence();
@@ -173,8 +192,8 @@ private:
 	}
 
 private:
-	Labellet* insert_label(int idx) {
-		Labellet* label = new Labellet(idx.ToString(), label_font, label_color);
+	Labellet* insert_label(CP id) {
+		Labellet* label = new Labellet(_speak(id), label_font, label_color);
 		float lbl_width;
 
 		label->fill_extent(0.0F, 0.0F, &lbl_width, nullptr);
@@ -201,7 +220,8 @@ private:
 
 private: // never delete these graphlet manually
 	ColorPlotlet* plot;
-	Labellet* labels[ColorPlotSize];
+	std::map<CP, Labellet*> labels;
+	std::map<CP, Credit<Dimensionlet, CP>*> ranges;
 	Credit<Dimensionlet, int>* depths[ColorPlotSize];
 	Credit<ColorPickerlet, int>* pickers[ColorPlotSize];
 	
@@ -258,5 +278,5 @@ bool ColorPlotPlanet::on_default() {
 }
 
 bool ColorPlotPlanet::on_edit(Dimensionlet* dim) {
-	return this->self->on_edit(static_cast<Credit<Dimensionlet, int>*>(dim));
+	return this->self->on_edit(dim);
 }

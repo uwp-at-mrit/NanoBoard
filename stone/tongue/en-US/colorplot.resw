@@ -117,46 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="a" xml:space="preserve">
-    <value>Ellipsoid Axis</value>
+  <data name="max" xml:space="preserve">
+    <value>Maximum Displaying Depth</value>
   </data>
-  <data name="CM" xml:space="preserve">
-    <value>Center Meridian</value>
-  </data>
-  <data name="Dx" xml:space="preserve">
-    <value>GP dx</value>
-  </data>
-  <data name="Dy" xml:space="preserve">
-    <value>GP dy</value>
-  </data>
-  <data name="Dz" xml:space="preserve">
-    <value>GP dz</value>
-  </data>
-  <data name="f" xml:space="preserve">
-    <value>Ellipsoid Flatness</value>
-  </data>
-  <data name="Rx" xml:space="preserve">
-    <value>CS Rx</value>
-  </data>
-  <data name="Ry" xml:space="preserve">
-    <value>CS Ry</value>
-  </data>
-  <data name="Rz" xml:space="preserve">
-    <value>CS Rz</value>
-  </data>
-  <data name="S" xml:space="preserve">
-    <value>CS Scale</value>
-  </data>
-  <data name="Tx" xml:space="preserve">
-    <value>CS Tx</value>
-  </data>
-  <data name="Ty" xml:space="preserve">
-    <value>CS Ty</value>
-  </data>
-  <data name="Tz" xml:space="preserve">
-    <value>CS Tz</value>
-  </data>
-  <data name="UTM_S" xml:space="preserve">
-    <value>GP Scale</value>
+  <data name="min" xml:space="preserve">
+    <value>Minimum Displaying Depth</value>
   </data>
 </root>

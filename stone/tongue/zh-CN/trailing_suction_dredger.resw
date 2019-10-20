@@ -141,6 +141,9 @@
   <data name="Body7" xml:space="preserve">
     <value>船体7点</value>
   </data>
+  <data name="bow_deg" xml:space="preserve">
+    <value>艏向角度</value>
+  </data>
   <data name="Bridge1" xml:space="preserve">
     <value>驾驶室1点</value>
   </data>
