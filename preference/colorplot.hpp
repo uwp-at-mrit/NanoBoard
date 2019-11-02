@@ -5,10 +5,10 @@
 namespace WarGrey::SCADA {
 	class ColorPlotSelf;
 
-	private class ColorPlotPlanet : public WarGrey::SCADA::EditorPlanet {
+	private class ColorPlotEditor : public WarGrey::SCADA::EditorPlanet {
 	public:
-		virtual ~ColorPlotPlanet() noexcept;
-		ColorPlotPlanet(Platform::String^ default_plot = "colorplot");
+		virtual ~ColorPlotEditor() noexcept;
+		ColorPlotEditor(Platform::String^ default_plot = "colorplot");
 
 	public:
 		void load(Microsoft::Graphics::Canvas::UI::CanvasCreateResourcesReason reason, float width, float height) override;

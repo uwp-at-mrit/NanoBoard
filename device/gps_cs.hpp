@@ -15,10 +15,10 @@ namespace WarGrey::SCADA {
 		virtual WarGrey::SCADA::double3 xyz_to_gps(double x, double y, double z, GCSParameter& gcs) = 0;
 	};
 
-	private class GPSCSPlanet : public WarGrey::SCADA::EditorPlanet {
+	private class GPSCSEditor : public WarGrey::SCADA::EditorPlanet {
 	public:
-		virtual ~GPSCSPlanet() noexcept;
-		GPSCSPlanet(WarGrey::SCADA::IGPSConvertor* gc = nullptr, Platform::String^ default_gps = "gps");
+		virtual ~GPSCSEditor() noexcept;
+		GPSCSEditor(WarGrey::SCADA::IGPSConvertor* gc = nullptr, Platform::String^ default_gps = "gps");
 
 	public:
 		void load(Microsoft::Graphics::Canvas::UI::CanvasCreateResourcesReason reason, float width, float height) override;

@@ -126,4 +126,7 @@
   <data name="trailing_suction_dredger" xml:space="preserve">
     <value>耙吸挖泥船型</value>
   </data>
+  <data name="transverse_section" xml:space="preserve">
+    <value>断面坐标设置</value>
+  </data>
 </root>

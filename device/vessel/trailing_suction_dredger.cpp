@@ -23,7 +23,7 @@ static CanvasTextFormat^ sketch_number_font = make_bold_text_format("Consolas", 
 static CanvasTextFormat^ sketch_font = make_bold_text_format("Consolas", 8.0F);
 
 static CanvasSolidColorBrush^ label_color = Colours::DarkGray;
-static CanvasSolidColorBrush^ sketch_color = Colours::GhostWhite;
+static CanvasSolidColorBrush^ original_color = Colours::GhostWhite;
 static CanvasSolidColorBrush^ axes_color = Colours::Salmon;
 static CanvasSolidColorBrush^ hopper_color = Colours::Khaki;
 static CanvasSolidColorBrush^ bridge_color = Colours::RoyalBlue;
@@ -107,9 +107,9 @@ namespace {
 				body->jump_back(TSD::Body5)->move_right(2.0F, TSD::y);
 				body->jump_back(TSD::Body4)->move_left(2.0F, TSD::origin)->move_up(8.0F, TSD::x);
 
-				this->body = this->insert_one(new Tracklet(body, thickness, sketch_color));
+				this->body = this->insert_one(new Tracklet(body, thickness, original_color));
 				this->body->push_subtrack(axes, axes_color);
-				this->body->push_subtrack(TSD::Body4, TSD::Body5, sketch_color);
+				this->body->push_subtrack(TSD::Body4, TSD::Body5, original_color);
 				this->body->push_subtrack(hoppers, hopper_color);
 			}
 
@@ -134,11 +134,11 @@ namespace {
 						if ((id >= TSD::Bridge1) && (id <= TSD::Bridge10)) {
 							this->bridge_labels[id] = this->insert_one(new Labellet((_I(id) - bridge0).ToString(), sketch_number_font, bridge_color));
 						} else if ((id >= TSD::Body1) && (id <= TSD::Body7)) {
-							this->body_labels[id] = this->insert_one(new Labellet((_I(id) - body0).ToString(), sketch_number_font, sketch_color));
+							this->body_labels[id] = this->insert_one(new Labellet((_I(id) - body0).ToString(), sketch_number_font, original_color));
 						} else if ((id >= TSD::Hopper1) && (id <= TSD::Hopper4)) {
 							this->body_labels[id] = this->insert_one(new Labellet((_I(id) - hopper0).ToString(), sketch_number_font, hopper_color));
 						} else {
-							this->body_labels[id] = this->insert_one(new Labellet(_speak(id), sketch_font, sketch_color));
+							this->body_labels[id] = this->insert_one(new Labellet(_speak(id), sketch_font, original_color));
 						}
 					} else if (id > TSD::_) {
 						this->body_labels[id] = this->insert_one(new Labellet(_speak(id), sketch_number_font, axes_color));
@@ -193,7 +193,7 @@ namespace {
 
 private class WarGrey::SCADA::TrailingSuctionDredgerSelf {
 public:
-	TrailingSuctionDredgerSelf(TrailingSuctionDredgerPlanet* master, Platform::String^ vessel)
+	TrailingSuctionDredgerSelf(TrailingSuctionDredgerEditor* master, Platform::String^ vessel)
 		: master(master), label_max_width(0.0F), vessel(vessel), entity(nullptr) {
 		this->input_style = make_highlight_dimension_style(label_font->FontSize, 7U, 1U);
 		this->input_style.unit_color = label_color;
@@ -422,19 +422,19 @@ private: // never delete these graphlet manually
 	std::map<TSD, Credit<Dimensionlet, TSD>*> ys;
 	
 private:
-	TrailingSuctionDredgerPlanet* master;
+	TrailingSuctionDredgerEditor* master;
 };
 
 /*************************************************************************************************/
-TrailingSuctionDredgerPlanet::TrailingSuctionDredgerPlanet(Platform::String^ vessel) : EditorPlanet(__MODULE__) {
+TrailingSuctionDredgerEditor::TrailingSuctionDredgerEditor(Platform::String^ vessel) : EditorPlanet(__MODULE__) {
 	this->self = new TrailingSuctionDredgerSelf(this, vessel);
 }
 
-TrailingSuctionDredgerPlanet::~TrailingSuctionDredgerPlanet() {
+TrailingSuctionDredgerEditor::~TrailingSuctionDredgerEditor() {
 	delete this->self;
 }
 
-void TrailingSuctionDredgerPlanet::load(CanvasCreateResourcesReason reason, float width, float height) {
+void TrailingSuctionDredgerEditor::load(CanvasCreateResourcesReason reason, float width, float height) {
 	float bg_width, bg_height;
 
 	EditorPlanet::load(reason, width, height);
@@ -443,7 +443,7 @@ void TrailingSuctionDredgerPlanet::load(CanvasCreateResourcesReason reason, floa
 	this->self->load(reason, bg_width, bg_height, (width - bg_width) * 0.5F);
 }
 
-void TrailingSuctionDredgerPlanet::reflow(float width, float height) {
+void TrailingSuctionDredgerEditor::reflow(float width, float height) {
 	float bg_width, bg_height;
 	
 	EditorPlanet::reflow(width, height);
@@ -452,22 +452,22 @@ void TrailingSuctionDredgerPlanet::reflow(float width, float height) {
 	this->self->reflow(this->background, width, height, (width - bg_width) * 0.5F);
 }
 
-void TrailingSuctionDredgerPlanet::on_graphlet_ready(IGraphlet* g) {
+void TrailingSuctionDredgerEditor::on_graphlet_ready(IGraphlet* g) {
 	this->self->on_graphlet_ready(g);
 }
 
-IGraphlet* TrailingSuctionDredgerPlanet::thumbnail_graphlet() {
+IGraphlet* TrailingSuctionDredgerEditor::thumbnail_graphlet() {
 	return this->self->thumbnail();
 }
 
-bool TrailingSuctionDredgerPlanet::on_apply() {
+bool TrailingSuctionDredgerEditor::on_apply() {
 	return this->self->on_apply();
 }
 
-bool TrailingSuctionDredgerPlanet::on_reset() {
+bool TrailingSuctionDredgerEditor::on_reset() {
 	return this->self->on_reset();
 }
 
-bool TrailingSuctionDredgerPlanet::on_edit(Dimensionlet* dim) {
+bool TrailingSuctionDredgerEditor::on_edit(Dimensionlet* dim) {
 	return this->self->on_edit(static_cast<Credit<Dimensionlet, TSD>*>(dim));
 }

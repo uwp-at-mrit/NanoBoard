@@ -3,12 +3,12 @@
 #include "editor.hpp"
 
 namespace WarGrey::SCADA {
-	class TrailingSuctionDredgerSelf;
+	class TransverseSectionSelf;
 
-	private class TrailingSuctionDredgerEditor : public WarGrey::SCADA::EditorPlanet {
+	private class TransverseSectionEditor : public WarGrey::SCADA::EditorPlanet {
 	public:
-		virtual ~TrailingSuctionDredgerEditor() noexcept;
-		TrailingSuctionDredgerEditor(Platform::String^ default_vessel = "vessel");
+		virtual ~TransverseSectionEditor() noexcept;
+		TransverseSectionEditor(Platform::String^ default_section = "section");
 
 	public:
 		void load(Microsoft::Graphics::Canvas::UI::CanvasCreateResourcesReason reason, float width, float height) override;
@@ -22,6 +22,6 @@ namespace WarGrey::SCADA {
 		bool on_edit(WarGrey::SCADA::Dimensionlet* dim) override;
 
 	private:
-		WarGrey::SCADA::TrailingSuctionDredgerSelf* self;
+		WarGrey::SCADA::TransverseSectionSelf* self;
 	};
 }

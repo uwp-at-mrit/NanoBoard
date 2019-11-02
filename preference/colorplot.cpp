@@ -33,7 +33,7 @@ namespace {
 
 private class WarGrey::SCADA::ColorPlotSelf {
 public:
-	ColorPlotSelf(ColorPlotPlanet* master, Platform::String^ plot) : master(master), label_max_width(0.0F), entity(nullptr) {
+	ColorPlotSelf(ColorPlotEditor* master, Platform::String^ plot) : master(master), label_max_width(0.0F), entity(nullptr) {
 		this->depth_style = make_highlight_dimension_style(label_font->FontSize, 3U, 6U, 2, label_color, Colours::Transparent);
 		this->depth_style.label_xfraction = 2.0F / 3.0F;
 		this->depth_style.unit_color = this->depth_style.label_color;
@@ -226,19 +226,19 @@ private: // never delete these graphlet manually
 	Credit<ColorPickerlet, int>* pickers[ColorPlotSize];
 	
 private:
-	ColorPlotPlanet* master;
+	ColorPlotEditor* master;
 };
 
 /*************************************************************************************************/
-ColorPlotPlanet::ColorPlotPlanet(Platform::String^ plot) : EditorPlanet(__MODULE__) {
+ColorPlotEditor::ColorPlotEditor(Platform::String^ plot) : EditorPlanet(__MODULE__) {
 	this->self = new ColorPlotSelf(this, plot);
 }
 
-ColorPlotPlanet::~ColorPlotPlanet() {
+ColorPlotEditor::~ColorPlotEditor() {
 	delete this->self;
 }
 
-void ColorPlotPlanet::load(CanvasCreateResourcesReason reason, float width, float height) {
+void ColorPlotEditor::load(CanvasCreateResourcesReason reason, float width, float height) {
 	float bg_width, bg_height;
 
 	EditorPlanet::load(reason, width, height);
@@ -248,7 +248,7 @@ void ColorPlotPlanet::load(CanvasCreateResourcesReason reason, float width, floa
 	this->self->load(reason, bg_width, bg_height, (width - bg_width) * 0.5F);
 }
 
-void ColorPlotPlanet::reflow(float width, float height) {
+void ColorPlotEditor::reflow(float width, float height) {
 	float bg_width, bg_height;
 	
 	EditorPlanet::reflow(width, height);
@@ -257,26 +257,26 @@ void ColorPlotPlanet::reflow(float width, float height) {
 	this->self->reflow(this->background, width, height, (width - bg_width) * 0.5F);
 }
 
-void ColorPlotPlanet::on_graphlet_ready(IGraphlet* g) {
+void ColorPlotEditor::on_graphlet_ready(IGraphlet* g) {
 	this->self->on_graphlet_ready(g);
 }
 
-IGraphlet* ColorPlotPlanet::thumbnail_graphlet() {
+IGraphlet* ColorPlotEditor::thumbnail_graphlet() {
 	return this->self->thumbnail();
 }
 
-bool ColorPlotPlanet::on_apply() {
+bool ColorPlotEditor::on_apply() {
 	return this->self->on_apply();
 }
 
-bool ColorPlotPlanet::on_reset() {
+bool ColorPlotEditor::on_reset() {
 	return this->self->on_reset();
 }
 
-bool ColorPlotPlanet::on_default() {
+bool ColorPlotEditor::on_default() {
 	return this->self->on_default();
 }
 
-bool ColorPlotPlanet::on_edit(Dimensionlet* dim) {
+bool ColorPlotEditor::on_edit(Dimensionlet* dim) {
 	return this->self->on_edit(dim);
 }

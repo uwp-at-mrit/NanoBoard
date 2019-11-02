@@ -46,7 +46,7 @@ namespace {
 
 private class WarGrey::SCADA::GPSCSSelf {
 public:
-	GPSCSSelf(GPSCSPlanet* master, Platform::String^ gps, IGPSConvertor* gc)
+	GPSCSSelf(GPSCSEditor* master, Platform::String^ gps, IGPSConvertor* gc)
 		: master(master), label_max_width(0.0F), entity(nullptr), convertor(gc) {
 		this->parameter_style = make_highlight_dimension_style(label_font->FontSize, 16U);
 		this->parameter_style.unit_color = Colours::Transparent;
@@ -327,20 +327,20 @@ private: // never delete these graphlet manually
 	std::map<GCS, Credit<Dimensionlet, GCS>*> os;
 	
 private:
-	GPSCSPlanet* master;
+	GPSCSEditor* master;
 	IGPSConvertor* convertor;
 };
 
 /*************************************************************************************************/
-GPSCSPlanet::GPSCSPlanet(IGPSConvertor* gc, Platform::String^ gps) : EditorPlanet(__MODULE__) {
+GPSCSEditor::GPSCSEditor(IGPSConvertor* gc, Platform::String^ gps) : EditorPlanet(__MODULE__) {
 	this->self = new GPSCSSelf(this, gps, gc);
 }
 
-GPSCSPlanet::~GPSCSPlanet() {
+GPSCSEditor::~GPSCSEditor() {
 	delete this->self;
 }
 
-void GPSCSPlanet::load(CanvasCreateResourcesReason reason, float width, float height) {
+void GPSCSEditor::load(CanvasCreateResourcesReason reason, float width, float height) {
 	float bg_width, bg_height;
 
 	EditorPlanet::load(reason, width, height);
@@ -349,7 +349,7 @@ void GPSCSPlanet::load(CanvasCreateResourcesReason reason, float width, float he
 	this->self->load(reason, bg_width, bg_height, (width - bg_width) * 0.5F);
 }
 
-void GPSCSPlanet::reflow(float width, float height) {
+void GPSCSEditor::reflow(float width, float height) {
 	float bg_width, bg_height;
 	
 	EditorPlanet::reflow(width, height);
@@ -358,22 +358,22 @@ void GPSCSPlanet::reflow(float width, float height) {
 	this->self->reflow(this->background, width, height, (width - bg_width) * 0.5F);
 }
 
-void GPSCSPlanet::on_graphlet_ready(IGraphlet* g) {
+void GPSCSEditor::on_graphlet_ready(IGraphlet* g) {
 	this->self->on_graphlet_ready(g);
 }
 
-IGraphlet* GPSCSPlanet::thumbnail_graphlet() {
+IGraphlet* GPSCSEditor::thumbnail_graphlet() {
 	return this->self->thumbnail();
 }
 
-bool GPSCSPlanet::on_apply() {
+bool GPSCSEditor::on_apply() {
 	return this->self->on_apply();
 }
 
-bool GPSCSPlanet::on_reset() {
+bool GPSCSEditor::on_reset() {
 	return this->self->on_reset();
 }
 
-bool GPSCSPlanet::on_edit(Dimensionlet* dim) {
+bool GPSCSEditor::on_edit(Dimensionlet* dim) {
 	return this->self->on_edit(static_cast<Credit<Dimensionlet, GCS>*>(dim));
 }

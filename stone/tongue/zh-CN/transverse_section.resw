@@ -117,16 +117,28 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="colorplot" xml:space="preserve">
-    <value>Depth Color Plot</value>
+  <data name="DepthDistance" xml:space="preserve">
+    <value>测深文件有效显示距离</value>
   </data>
-  <data name="gps_cs" xml:space="preserve">
-    <value>GPS CS</value>
+  <data name="DragHeadsDistance" xml:space="preserve">
+    <value>耙头文件有效显示距离</value>
   </data>
-  <data name="trailing_suction_dredger" xml:space="preserve">
-    <value>TSH Dredger</value>
+  <data name="MaxDepth" xml:space="preserve">
+    <value>最大深度</value>
   </data>
-  <data name="transverse_section" xml:space="preserve">
-    <value>Transverse Section</value>
+  <data name="MaxLength" xml:space="preserve">
+    <value>最大长度</value>
+  </data>
+  <data name="MinDepth" xml:space="preserve">
+    <value>最小深度</value>
+  </data>
+  <data name="Width" xml:space="preserve">
+    <value>宽度</value>
+  </data>
+  <data name="XInterval" xml:space="preserve">
+    <value>有效间隔--X</value>
+  </data>
+  <data name="YInterval" xml:space="preserve">
+    <value>有效间隔--Y</value>
   </data>
 </root>
