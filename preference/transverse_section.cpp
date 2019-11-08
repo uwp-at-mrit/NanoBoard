@@ -106,7 +106,7 @@ public:
 			this->metrics[id] = this->insert_input_field(id, 0.0);
 		}
 		
-		this->transverse_section = new TransverseSectionlet(this->section, width - inset * 4.0F);
+		this->transverse_section = new TransverseSectionlet(nullptr, this->section, width - inset * 4.0F);
 		this->master->insert(this->transverse_section);
 
 		this->sketch = this->master->insert_one(new Planetlet(new SketchIcon()));
