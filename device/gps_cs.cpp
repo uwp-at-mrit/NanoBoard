@@ -7,6 +7,7 @@
 #include "module.hpp"
 
 using namespace WarGrey::SCADA;
+using namespace WarGrey::DTPM;
 
 using namespace Windows::Foundation;
 
@@ -44,7 +45,7 @@ namespace {
 	};
 }
 
-private class WarGrey::SCADA::GPSCSSelf {
+private class WarGrey::DTPM::GPSCSSelf {
 public:
 	GPSCSSelf(GPSCSEditor* master, Platform::String^ gps, IGPSConvertor* gc)
 		: master(master), label_max_width(0.0F), entity(nullptr), convertor(gc) {

@@ -11,6 +11,7 @@
 #include "module.hpp"
 
 using namespace WarGrey::SCADA;
+using namespace WarGrey::DTPM;
 
 using namespace Windows::Foundation;
 
@@ -31,7 +32,7 @@ namespace {
 	};
 }
 
-private class WarGrey::SCADA::ColorPlotSelf {
+private class WarGrey::DTPM::ColorPlotSelf {
 public:
 	ColorPlotSelf(ColorPlotEditor* master, Platform::String^ plot) : master(master), label_max_width(0.0F), entity(nullptr) {
 		this->depth_style = make_highlight_dimension_style(label_font->FontSize, 3U, 6U, 2, label_color, Colours::Transparent);

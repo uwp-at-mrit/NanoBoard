@@ -5,7 +5,7 @@
 namespace WarGrey::SCADA {
 	class TrailingSuctionDredgerSelf;
 
-	private class TrailingSuctionDredgerEditor : public WarGrey::SCADA::EditorPlanet {
+	private class TrailingSuctionDredgerEditor : public WarGrey::DTPM::EditorPlanet {
 	public:
 		virtual ~TrailingSuctionDredgerEditor() noexcept;
 		TrailingSuctionDredgerEditor(Platform::String^ default_vessel = "vessel");

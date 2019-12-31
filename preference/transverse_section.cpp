@@ -11,6 +11,7 @@
 #include "module.hpp"
 
 using namespace WarGrey::SCADA;
+using namespace WarGrey::DTPM;
 
 using namespace Windows::Foundation;
 
@@ -91,7 +92,7 @@ namespace {
 	};
 }
 
-private class WarGrey::SCADA::TransverseSectionSelf {
+private class WarGrey::DTPM::TransverseSectionSelf {
 public:
 	TransverseSectionSelf(TransverseSectionEditor* master, Platform::String^ section)
 		: master(master), label_max_width(0.0F), section(section), entity(nullptr) {

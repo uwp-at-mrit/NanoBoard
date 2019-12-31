@@ -7,7 +7,7 @@
 
 #include "graphlet/shapelet.hpp"
 
-namespace WarGrey::SCADA {
+namespace WarGrey::DTPM {
 	private class EditorPlanet : public WarGrey::SCADA::Planet {
 	public:
 		EditorPlanet(Platform::String^ caption, unsigned int initial_mode = 0);
@@ -18,9 +18,9 @@ namespace WarGrey::SCADA {
 		
 	public:
 		bool can_select(WarGrey::SCADA::IGraphlet* g) override;
-		void on_tap_selected(IGraphlet* g, float local_x, float local_y) override;
+		void on_tap_selected(WarGrey::SCADA::IGraphlet* g, float local_x, float local_y) override;
 		bool on_key(Windows::System::VirtualKey key, bool wargrey_keyboard) override;
-		void on_focus(IGraphlet* g, bool yes) override;
+		void on_focus(WarGrey::SCADA::IGraphlet* g, bool yes) override;
 
 	public:
 		void enable_default(bool on_off);
