@@ -18,14 +18,14 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)device\vessel\trailing_suction_dredger.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)editor.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)preference\colorplot.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)preference\transverse_section.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)preference\profile.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)device\gps_cs.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)device\vessel\trailing_suction_dredger.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)editor.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)preference\colorplot.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)preference\transverse_section.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)preference\profile.hpp" />
   </ItemGroup>
   <ItemGroup>
     <PRIResource Include="$(MSBuildThisFileDirectory)stone\tongue\en-US\colorplot.resw" />

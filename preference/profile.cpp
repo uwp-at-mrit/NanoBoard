@@ -1,8 +1,8 @@
 #include <map>
 
-#include "preference/transverse_section.hpp"
+#include "preference/profile.hpp"
 
-#include "graphlet/filesystem/project/sectionlet.hpp"
+#include "graphlet/filesystem/project/profilet.hpp"
 #include "graphlet/shapelet.hpp"
 #include "graphlet/planetlet.hpp"
 
@@ -92,9 +92,9 @@ namespace {
 	};
 }
 
-private class WarGrey::DTPM::TransverseSectionSelf {
+private class WarGrey::DTPM::ProfileSelf {
 public:
-	TransverseSectionSelf(TransverseSectionEditor* master, Platform::String^ section)
+	ProfileSelf(ProfileEditor* master, Platform::String^ section)
 		: master(master), label_max_width(0.0F), section(section), entity(nullptr) {
 		this->input_style = make_highlight_dimension_style(label_font->FontSize, 8U, 1U);
 		this->input_style.unit_color = label_color;
@@ -107,7 +107,7 @@ public:
 			this->metrics[id] = this->insert_input_field(id, 0.0);
 		}
 		
-		this->transverse_section = new TransverseSectionlet(nullptr, this->section, width - inset * 4.0F);
+		this->transverse_section = new Profilet(nullptr, this->section, width - inset * 4.0F);
 		this->master->insert(this->transverse_section);
 
 		this->sketch = this->master->insert_one(new Planetlet(new SketchIcon()));
@@ -127,7 +127,7 @@ public:
 
 	void on_graphlet_ready(IGraphlet* g) {
 		if (this->transverse_section == g) { // also see `this->load()`
-			this->entity = this->transverse_section->clone_section(this->entity);
+			this->entity = this->transverse_section->clone_profile(this->entity);
 			this->refresh_input_fields();
 		}
 	}
@@ -161,7 +161,7 @@ public:
 		if (this->transverse_section != nullptr) {
 			this->transverse_section->preview(nullptr);
 			
-			this->entity = this->transverse_section->clone_section(this->entity, true);
+			this->entity = this->transverse_section->clone_profile(this->entity, true);
 			this->refresh_input_fields();
 		}
 
@@ -176,7 +176,7 @@ public:
 private:
 	void refresh_entity() {
 		if (this->entity == nullptr) {
-			this->entity = ref new TransverseSection();
+			this->entity = ref new Profile();
 		}
 
 		Section_Refresh_Vertex(this->entity, width, this->metrics, TS::Width);
@@ -243,29 +243,29 @@ private:
 private:
 	float label_max_width;
 	DimensionStyle input_style;
-	TransverseSection^ entity;
+	Profile^ entity;
 	Platform::String^ section;
 
 private: // never delete these graphlet manually
-	TransverseSectionlet* transverse_section;
+	Profilet* transverse_section;
 	std::map<TS, Labellet*> labels;
 	std::map<TS, Credit<Dimensionlet, TS>*> metrics;
 	Planetlet* sketch;
 	
 private:
-	TransverseSectionEditor* master;
+	ProfileEditor* master;
 };
 
 /*************************************************************************************************/
-TransverseSectionEditor::TransverseSectionEditor(Platform::String^ section) : EditorPlanet(__MODULE__) {
-	this->self = new TransverseSectionSelf(this, section);
+ProfileEditor::ProfileEditor(Platform::String^ section) : EditorPlanet(__MODULE__) {
+	this->self = new ProfileSelf(this, section);
 }
 
-TransverseSectionEditor::~TransverseSectionEditor() {
+ProfileEditor::~ProfileEditor() {
 	delete this->self;
 }
 
-void TransverseSectionEditor::load(CanvasCreateResourcesReason reason, float width, float height) {
+void ProfileEditor::load(CanvasCreateResourcesReason reason, float width, float height) {
 	float bg_width, bg_height;
 
 	EditorPlanet::load(reason, width, height);
@@ -274,7 +274,7 @@ void TransverseSectionEditor::load(CanvasCreateResourcesReason reason, float wid
 	this->self->load(reason, bg_width, bg_height, (width - bg_width) * 0.5F);
 }
 
-void TransverseSectionEditor::reflow(float width, float height) {
+void ProfileEditor::reflow(float width, float height) {
 	float bg_width, bg_height;
 	
 	EditorPlanet::reflow(width, height);
@@ -283,22 +283,22 @@ void TransverseSectionEditor::reflow(float width, float height) {
 	this->self->reflow(this->background, width, height, (width - bg_width) * 0.5F);
 }
 
-void TransverseSectionEditor::on_graphlet_ready(IGraphlet* g) {
+void ProfileEditor::on_graphlet_ready(IGraphlet* g) {
 	this->self->on_graphlet_ready(g);
 }
 
-IGraphlet* TransverseSectionEditor::thumbnail_graphlet() {
+IGraphlet* ProfileEditor::thumbnail_graphlet() {
 	return this->self->thumbnail();
 }
 
-bool TransverseSectionEditor::on_apply() {
+bool ProfileEditor::on_apply() {
 	return this->self->on_apply();
 }
 
-bool TransverseSectionEditor::on_reset() {
+bool ProfileEditor::on_reset() {
 	return this->self->on_reset();
 }
 
-bool TransverseSectionEditor::on_edit(Dimensionlet* dim) {
+bool ProfileEditor::on_edit(Dimensionlet* dim) {
 	return this->self->on_edit(static_cast<Credit<Dimensionlet, TS>*>(dim));
 }

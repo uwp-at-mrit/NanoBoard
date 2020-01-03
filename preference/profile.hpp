@@ -3,12 +3,12 @@
 #include "editor.hpp"
 
 namespace WarGrey::DTPM {
-	class TransverseSectionSelf;
+	class ProfileSelf;
 
-	private class TransverseSectionEditor : public WarGrey::DTPM::EditorPlanet {
+	private class ProfileEditor : public WarGrey::DTPM::EditorPlanet {
 	public:
-		virtual ~TransverseSectionEditor() noexcept;
-		TransverseSectionEditor(Platform::String^ default_section = "section");
+		virtual ~ProfileEditor() noexcept;
+		ProfileEditor(Platform::String^ default_section = "profile");
 
 	public:
 		void load(Microsoft::Graphics::Canvas::UI::CanvasCreateResourcesReason reason, float width, float height) override;
@@ -22,6 +22,6 @@ namespace WarGrey::DTPM {
 		bool on_edit(WarGrey::SCADA::Dimensionlet* dim) override;
 
 	private:
-		WarGrey::DTPM::TransverseSectionSelf* self;
+		WarGrey::DTPM::ProfileSelf* self;
 	};
 }

@@ -34,9 +34,7 @@
       <Filter>preference</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)editor.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)preference\transverse_section.cpp">
-      <Filter>preference</Filter>
-    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)preference\profile.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)device\vessel\trailing_suction_dredger.hpp">
@@ -49,9 +47,7 @@
       <Filter>preference</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)editor.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)preference\transverse_section.hpp">
-      <Filter>preference</Filter>
-    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)preference\profile.hpp" />
   </ItemGroup>
   <ItemGroup>
     <PRIResource Include="$(MSBuildThisFileDirectory)stone\tongue\en-US\gps_cs.resw">
