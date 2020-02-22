@@ -3,8 +3,6 @@
 #include "editor.hpp"
 
 namespace WarGrey::DTPM {
-	class ColorPlotSelf;
-
 	private class ColorPlotEditor : public WarGrey::DTPM::EditorPlanet {
 	public:
 		virtual ~ColorPlotEditor() noexcept;
@@ -23,6 +21,7 @@ namespace WarGrey::DTPM {
 		bool on_edit(WarGrey::SCADA::Dimensionlet* dim) override;
 
 	private:
-		WarGrey::DTPM::ColorPlotSelf* self;
+		class Self;
+		WarGrey::DTPM::ColorPlotEditor::Self* self;
 	};
 }

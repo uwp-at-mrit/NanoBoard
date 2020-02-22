@@ -45,10 +45,9 @@ namespace {
 	};
 }
 
-private class WarGrey::DTPM::GPSCSSelf {
+class WarGrey::DTPM::GPSCSEditor::Self {
 public:
-	GPSCSSelf(GPSCSEditor* master, Platform::String^ gps, IGPSConvertor* gc)
-		: master(master), label_max_width(0.0F), entity(nullptr), convertor(gc) {
+	Self(GPSCSEditor* master, Platform::String^ gps, IGPSConvertor* gc) : master(master), label_max_width(0.0F), entity(nullptr), convertor(gc) {
 		this->parameter_style = make_highlight_dimension_style(label_font->FontSize, 16U);
 		this->parameter_style.unit_color = Colours::Transparent;
 
@@ -334,7 +333,7 @@ private:
 
 /*************************************************************************************************/
 GPSCSEditor::GPSCSEditor(IGPSConvertor* gc, Platform::String^ gps) : EditorPlanet(__MODULE__) {
-	this->self = new GPSCSSelf(this, gps, gc);
+	this->self = new GPSCSEditor::Self(this, gps, gc);
 }
 
 GPSCSEditor::~GPSCSEditor() {

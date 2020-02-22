@@ -32,9 +32,9 @@ namespace {
 	};
 }
 
-private class WarGrey::DTPM::ColorPlotSelf {
+class WarGrey::DTPM::ColorPlotEditor::Self {
 public:
-	ColorPlotSelf(ColorPlotEditor* master, Platform::String^ plot) : master(master), label_max_width(0.0F), entity(nullptr) {
+	Self(ColorPlotEditor* master, Platform::String^ plot) : master(master), label_max_width(0.0F), entity(nullptr) {
 		this->depth_style = make_highlight_dimension_style(label_font->FontSize, 3U, 6U, 2, label_color, Colours::Transparent);
 		this->depth_style.label_xfraction = 2.0F / 3.0F;
 		this->depth_style.unit_color = this->depth_style.label_color;
@@ -232,7 +232,7 @@ private:
 
 /*************************************************************************************************/
 ColorPlotEditor::ColorPlotEditor(Platform::String^ plot) : EditorPlanet(__MODULE__) {
-	this->self = new ColorPlotSelf(this, plot);
+	this->self = new ColorPlotEditor::Self(this, plot);
 }
 
 ColorPlotEditor::~ColorPlotEditor() {

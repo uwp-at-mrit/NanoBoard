@@ -92,10 +92,9 @@ namespace {
 	};
 }
 
-private class WarGrey::DTPM::ProfileSelf {
+class WarGrey::DTPM::ProfileEditor::Self {
 public:
-	ProfileSelf(ProfileEditor* master, Platform::String^ section)
-		: master(master), label_max_width(0.0F), section(section), entity(nullptr) {
+	Self(ProfileEditor* master, Platform::String^ section) : master(master), label_max_width(0.0F), section(section), entity(nullptr) {
 		this->input_style = make_highlight_dimension_style(label_font->FontSize, 8U, 1U);
 		this->input_style.unit_color = label_color;
 	}
@@ -258,7 +257,7 @@ private:
 
 /*************************************************************************************************/
 ProfileEditor::ProfileEditor(Platform::String^ section) : EditorPlanet(__MODULE__) {
-	this->self = new ProfileSelf(this, section);
+	this->self = new ProfileEditor::Self(this, section);
 }
 
 ProfileEditor::~ProfileEditor() {

@@ -34,7 +34,12 @@
       <Filter>preference</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)editor.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)preference\profile.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)preference\profile.cpp">
+      <Filter>preference</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)preference\dragtrack.cpp">
+      <Filter>preference</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)device\vessel\trailing_suction_dredger.hpp">
@@ -47,7 +52,12 @@
       <Filter>preference</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)editor.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)preference\profile.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)preference\profile.hpp">
+      <Filter>preference</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)preference\dragtrack.hpp">
+      <Filter>preference</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <PRIResource Include="$(MSBuildThisFileDirectory)stone\tongue\en-US\gps_cs.resw">
@@ -80,10 +90,16 @@
     <PRIResource Include="$(MSBuildThisFileDirectory)stone\tongue\zh-CN\menu.resw">
       <Filter>stone\tongue\zh-CN</Filter>
     </PRIResource>
-    <PRIResource Include="$(MSBuildThisFileDirectory)stone\tongue\en-US\transverse_section.resw">
+    <PRIResource Include="$(MSBuildThisFileDirectory)stone\tongue\en-US\dragtrack.resw">
       <Filter>stone\tongue\en-US</Filter>
     </PRIResource>
-    <PRIResource Include="$(MSBuildThisFileDirectory)stone\tongue\zh-CN\transverse_section.resw">
+    <PRIResource Include="$(MSBuildThisFileDirectory)stone\tongue\zh-CN\dragtrack.resw">
+      <Filter>stone\tongue\zh-CN</Filter>
+    </PRIResource>
+    <PRIResource Include="$(MSBuildThisFileDirectory)stone\tongue\en-US\profile.resw">
+      <Filter>stone\tongue\en-US</Filter>
+    </PRIResource>
+    <PRIResource Include="$(MSBuildThisFileDirectory)stone\tongue\zh-CN\profile.resw">
       <Filter>stone\tongue\zh-CN</Filter>
     </PRIResource>
   </ItemGroup>

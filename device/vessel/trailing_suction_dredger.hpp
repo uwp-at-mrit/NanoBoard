@@ -3,8 +3,6 @@
 #include "editor.hpp"
 
 namespace WarGrey::SCADA {
-	class TrailingSuctionDredgerSelf;
-
 	private class TrailingSuctionDredgerEditor : public WarGrey::DTPM::EditorPlanet {
 	public:
 		virtual ~TrailingSuctionDredgerEditor() noexcept;
@@ -22,6 +20,7 @@ namespace WarGrey::SCADA {
 		bool on_edit(WarGrey::SCADA::Dimensionlet* dim) override;
 
 	private:
-		WarGrey::SCADA::TrailingSuctionDredgerSelf* self;
+		class Self;
+		WarGrey::SCADA::TrailingSuctionDredgerEditor::Self* self;
 	};
 }

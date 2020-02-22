@@ -117,19 +117,31 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="colorplot" xml:space="preserve">
-    <value>水深与色块</value>
+  <data name="AfterImage" xml:space="preserve">
+    <value>After Image</value>
   </data>
-  <data name="dragtrack" xml:space="preserve">
-    <value>疏浚轨迹设置</value>
+  <data name="BeginTime" xml:space="preserve">
+    <value>Begin Time</value>
   </data>
-  <data name="gps_cs" xml:space="preserve">
-    <value>GPS 转换参数</value>
+  <data name="Depth0" xml:space="preserve">
+    <value>Depth0</value>
   </data>
-  <data name="profile" xml:space="preserve">
-    <value>断面坐标设置</value>
+  <data name="EndTime" xml:space="preserve">
+    <value>End Time</value>
   </data>
-  <data name="trailing_suction_dredger" xml:space="preserve">
-    <value>耙吸挖泥船型</value>
+  <data name="PSVisible" xml:space="preserve">
+    <value>PS Visible</value>
+  </data>
+  <data name="SBVisible" xml:space="preserve">
+    <value>SB Visible</value>
+  </data>
+  <data name="TrackColor" xml:space="preserve">
+    <value>Track Color</value>
+  </data>
+  <data name="TrackInterval" xml:space="preserve">
+    <value>Track Interval</value>
+  </data>
+  <data name="TrackWidth" xml:space="preserve">
+    <value>Track Width</value>
   </data>
 </root>

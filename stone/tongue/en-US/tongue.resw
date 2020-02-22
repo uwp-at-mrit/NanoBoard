@@ -120,13 +120,16 @@
   <data name="colorplot" xml:space="preserve">
     <value>Depth Color Plot</value>
   </data>
+  <data name="dragtrack" xml:space="preserve">
+    <value>DH Track</value>
+  </data>
   <data name="gps_cs" xml:space="preserve">
     <value>GPS CS</value>
   </data>
+  <data name="profile" xml:space="preserve">
+    <value>Profile</value>
+  </data>
   <data name="trailing_suction_dredger" xml:space="preserve">
     <value>TSH Dredger</value>
-  </data>
-  <data name="transverse_section" xml:space="preserve">
-    <value>Transverse Section</value>
   </data>
 </root>

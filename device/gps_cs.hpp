@@ -7,8 +7,6 @@
 #include "cs/wgs_xy.hpp"
 
 namespace WarGrey::DTPM {
-	class GPSCSSelf;
-
 	private class IGPSConvertor abstract {
 	public:
 		virtual WarGrey::SCADA::double3 gps_to_xyz(double latitude, double longitude, double altitude, WarGrey::DTPM::GCSParameter& gcs) = 0;
@@ -32,6 +30,7 @@ namespace WarGrey::DTPM {
 		bool on_edit(WarGrey::SCADA::Dimensionlet* dim) override;
 
 	private:
-		WarGrey::DTPM::GPSCSSelf* self;
+		class Self;
+		WarGrey::DTPM::GPSCSEditor::Self* self;
 	};
 }

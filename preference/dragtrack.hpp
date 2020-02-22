@@ -3,10 +3,10 @@
 #include "editor.hpp"
 
 namespace WarGrey::DTPM {
-	private class ProfileEditor : public WarGrey::DTPM::EditorPlanet {
+	private class DragTrackEditor : public WarGrey::DTPM::EditorPlanet {
 	public:
-		virtual ~ProfileEditor() noexcept;
-		ProfileEditor(Platform::String^ default_section = "profile");
+		virtual ~DragTrackEditor() noexcept;
+		DragTrackEditor(Platform::String^ default_track = "dragtrack");
 
 	public:
 		void load(Microsoft::Graphics::Canvas::UI::CanvasCreateResourcesReason reason, float width, float height) override;
@@ -21,6 +21,6 @@ namespace WarGrey::DTPM {
 
 	private:
 		class Self;
-		WarGrey::DTPM::ProfileEditor::Self* self;
+		WarGrey::DTPM::DragTrackEditor::Self* self;
 	};
 }

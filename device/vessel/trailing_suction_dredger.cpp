@@ -192,10 +192,9 @@ namespace {
 	};
 }
 
-private class WarGrey::SCADA::TrailingSuctionDredgerSelf {
+class WarGrey::SCADA::TrailingSuctionDredgerEditor::Self {
 public:
-	TrailingSuctionDredgerSelf(TrailingSuctionDredgerEditor* master, Platform::String^ vessel)
-		: master(master), label_max_width(0.0F), vessel(vessel), entity(nullptr) {
+	Self(TrailingSuctionDredgerEditor* master, Platform::String^ vessel) : master(master), label_max_width(0.0F), vessel(vessel), entity(nullptr) {
 		this->input_style = make_highlight_dimension_style(label_font->FontSize, 7U, 1U);
 		this->input_style.unit_color = label_color;
 	}
@@ -428,7 +427,7 @@ private:
 
 /*************************************************************************************************/
 TrailingSuctionDredgerEditor::TrailingSuctionDredgerEditor(Platform::String^ vessel) : EditorPlanet(__MODULE__) {
-	this->self = new TrailingSuctionDredgerSelf(this, vessel);
+	this->self = new TrailingSuctionDredgerEditor::Self(this, vessel);
 }
 
 TrailingSuctionDredgerEditor::~TrailingSuctionDredgerEditor() {
