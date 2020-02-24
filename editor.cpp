@@ -1,6 +1,7 @@
 #include "editor.hpp"
 
 #include "graphlet/ui/colorpickerlet.hpp"
+#include "graphlet/ui/togglet.hpp"
 
 using namespace WarGrey::SCADA;
 using namespace WarGrey::DTPM;
@@ -58,12 +59,14 @@ void EditorPlanet::reflow(float width, float height) {
 
 bool EditorPlanet::can_select(WarGrey::SCADA::IGraphlet* g) {
 	Buttonlet* b = dynamic_cast<Buttonlet*>(g);
-	IEditorlet* t = dynamic_cast<IEditorlet*>(g);
+	IEditorlet* e = dynamic_cast<IEditorlet*>(g);
 	ColorPickerlet* p = dynamic_cast<ColorPickerlet*>(g);
+	Togglet* t = dynamic_cast<Togglet*>(g);
 
 	return ((b != nullptr) && (b->get_state() != ButtonState::Disabled))
-		|| ((t != nullptr) && (t->get_state() == DimensionState::Input))
-		|| (p != nullptr);
+		|| ((e != nullptr) && (e->get_state() == DimensionState::Input))
+		|| (p != nullptr)
+		|| (t != nullptr);
 }
 
 bool EditorPlanet::on_key(VirtualKey key, bool wargrey_keyboard) {
@@ -126,6 +129,13 @@ void EditorPlanet::on_tap_selected(IGraphlet* g, float local_x, float local_y) {
 		}
 	} else if (this->default == g) {
 		if (this->on_default()) {
+			this->notify_modification();
+		}
+	} else {
+		Togglet* t = dynamic_cast<Togglet*>(g);
+
+		if (t != nullptr) {
+			t->toggle();
 			this->notify_modification();
 		}
 	}

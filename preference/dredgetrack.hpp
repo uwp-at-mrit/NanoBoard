@@ -3,10 +3,10 @@
 #include "editor.hpp"
 
 namespace WarGrey::DTPM {
-	private class DragTrackEditor : public WarGrey::DTPM::EditorPlanet {
+	private class DredgeTrackEditor : public WarGrey::DTPM::EditorPlanet {
 	public:
-		virtual ~DragTrackEditor() noexcept;
-		DragTrackEditor(Platform::String^ default_track = "dragtrack");
+		virtual ~DredgeTrackEditor() noexcept;
+		DredgeTrackEditor(Platform::String^ default_track = "track");
 
 	public:
 		void load(Microsoft::Graphics::Canvas::UI::CanvasCreateResourcesReason reason, float width, float height) override;
@@ -17,10 +17,11 @@ namespace WarGrey::DTPM {
 	protected:
 		bool on_apply() override;
 		bool on_reset() override;
+		bool on_default() override;
 		bool on_edit(WarGrey::SCADA::Dimensionlet* dim) override;
 
 	private:
 		class Self;
-		WarGrey::DTPM::DragTrackEditor::Self* self;
+		WarGrey::DTPM::DredgeTrackEditor::Self* self;
 	};
 }

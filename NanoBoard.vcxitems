@@ -18,7 +18,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)device\vessel\trailing_suction_dredger.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)editor.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)preference\colorplot.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)preference\dragtrack.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)preference\dredgetrack.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)preference\profile.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -26,19 +26,19 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)device\vessel\trailing_suction_dredger.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)editor.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)preference\colorplot.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)preference\dragtrack.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)preference\dredgetrack.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)preference\profile.hpp" />
   </ItemGroup>
   <ItemGroup>
     <PRIResource Include="$(MSBuildThisFileDirectory)stone\tongue\en-US\colorplot.resw" />
-    <PRIResource Include="$(MSBuildThisFileDirectory)stone\tongue\en-US\dragtrack.resw" />
+    <PRIResource Include="$(MSBuildThisFileDirectory)stone\tongue\en-US\dredgetrack.resw" />
     <PRIResource Include="$(MSBuildThisFileDirectory)stone\tongue\en-US\gps_cs.resw" />
     <PRIResource Include="$(MSBuildThisFileDirectory)stone\tongue\en-US\menu.resw" />
     <PRIResource Include="$(MSBuildThisFileDirectory)stone\tongue\en-US\tongue.resw" />
     <PRIResource Include="$(MSBuildThisFileDirectory)stone\tongue\en-US\trailing_suction_dredger.resw" />
     <PRIResource Include="$(MSBuildThisFileDirectory)stone\tongue\en-US\profile.resw" />
     <PRIResource Include="$(MSBuildThisFileDirectory)stone\tongue\zh-CN\colorplot.resw" />
-    <PRIResource Include="$(MSBuildThisFileDirectory)stone\tongue\zh-CN\dragtrack.resw" />
+    <PRIResource Include="$(MSBuildThisFileDirectory)stone\tongue\zh-CN\dredgetrack.resw" />
     <PRIResource Include="$(MSBuildThisFileDirectory)stone\tongue\zh-CN\gps_cs.resw" />
     <PRIResource Include="$(MSBuildThisFileDirectory)stone\tongue\zh-CN\menu.resw" />
     <PRIResource Include="$(MSBuildThisFileDirectory)stone\tongue\zh-CN\tongue.resw" />

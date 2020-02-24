@@ -1,12 +1,16 @@
 #include <map>
 
-#include "preference/dragtrack.hpp"
+#include "preference/dredgetrack.hpp"
 
-#include "graphlet/filesystem/project/dragtracklet.hpp"
+#include "graphlet/filesystem/project/dredgetracklet.hpp"
 #include "graphlet/time/datepickerlet.hpp"
+#include "graphlet/ui/colorpickerlet.hpp"
+#include "graphlet/ui/togglet.hpp"
 
 #include "graphlet/shapelet.hpp"
 #include "graphlet/planetlet.hpp"
+
+#include "palette/xterm256.hpp"
 
 #include "datum/flonum.hpp"
 #include "datum/time.hpp"
@@ -32,91 +36,81 @@ static CanvasSolidColorBrush^ designed_color = Colours::SkyBlue;
 static CanvasSolidColorBrush^ axes_color = Colours::Salmon;
 static CanvasSolidColorBrush^ water_color = Colours::SeaGreen;
 
-#define Section_Display_Vertex(v, ref, ms, id) ms[id]->set_value(v->ref)
-#define Section_Refresh_Vertex(v, ref, ms, id) v->ref = ms[id]->get_value()
-
 /*************************************************************************************************/
 namespace {
 	// order matters
 	private enum class DT {
-		BeginTime, EndTime,
-		TrackWidth, TrackColor,
-
-		PSVisible, SBVisible,
-
 		Depth0, TrackInterval, AfterImage,
+		TrackWidth, TrackColor,
 
 		_,
 
-		// for sketch icon
-		lb, rt, tide
-	};
-
-	private class SketchIcon : public Planet {
-	public:
-		SketchIcon() : Planet("dragtrack") {}
-
-	public:
-		void load(CanvasCreateResourcesReason reason, float width, float height) override {
-			float stepsize = 36.0F;
-			float thickness = 2.0F;
-		}
-
-		void reflow(float width, float height) override {
-		}
-
-	private: // never delete these graphlet manually
-		Tracklet<DT>* designed_section;
-		Tracklet<DT>* original_section;
-		std::map<DT, Shapelet*> decorates;
+		// misc
+		BeginTime, EndTime,
+		PSVisible, SBVisible
 	};
 }
 
-class WarGrey::DTPM::DragTrackEditor::Self {
+class WarGrey::DTPM::DredgeTrackEditor::Self {
 public:
-	Self(DragTrackEditor* master, Platform::String^ section) : master(master), label_max_width(0.0F), section(section), entity(nullptr) {
+	Self(DredgeTrackEditor* master, Platform::String^ dregertrack) : master(master), label_max_width(0.0F), dregertrack(dregertrack), entity(nullptr) {
 		this->input_style = make_highlight_dimension_style(label_font->FontSize, 8U, 1U);
 		this->input_style.unit_color = label_color;
 	}
 
 public:
 	void load(CanvasCreateResourcesReason reason, float width, float height, float inset) {
+		float in_width, in_height;
+
 		for (DT id = _E0(DT); id < DT::_; id++) {
 			this->labels[id] = this->insert_label(id);
 
 			switch (id) {
-			case DT::BeginTime: case DT::EndTime: this->dates[id] = this->insert_date_picker(id); break;
+			case DT::AfterImage: this->metrics[id] = this->insert_input_field(id, 0.0, "hour"); break;
+			case DT::TrackWidth: this->metrics[id] = this->insert_input_field(id, 0.0, "pixel"); break;
+			case DT::TrackColor: {
+				this->metrics[DT::Depth0]->fill_extent(0.0F, 0.0F, &in_width, &in_height);
+				this->color_picker = this->master->insert_one(new ColorPickerlet(Palette::Xterm256, in_width, in_height));
+			}; break;
 			default: this->metrics[id] = this->insert_input_field(id, 0.0, "meter");
 			}
 		}
-		
-		this->track = new DragTracklet(nullptr, this->section, width - inset * 4.0F);
-		this->master->insert(this->track);
 
-		this->sketch = this->master->insert_one(new Planetlet(new SketchIcon()));
+		this->dates[DT::BeginTime] = this->insert_date_picker(DT::BeginTime);
+		this->dates[DT::EndTime] = this->insert_date_picker(DT::EndTime);
+
+		this->dates[DT::BeginTime]->fill_extent(0.0F, 0.0F, &in_width, nullptr);
+		this->toggles[DT::PSVisible] = this->insert_toggle(DT::PSVisible, in_width);
+		this->toggles[DT::SBVisible] = this->insert_toggle(DT::SBVisible, in_width);
+
+		this->track = new DredgeTracklet(nullptr, this->dregertrack, width * 0.2F);
+		this->master->insert(this->track);
 	}
 
 	void reflow(IGraphlet* frame, float width, float height, float inset) {
 		float pwidth, pheight;
 		float y0 = inset;
-		float xgapsize = inset;
-		float ygapsize = inset;
+		float xgapsize = inset * 0.618F;
+		float ygapsize = inset * 0.618F;
 
 		this->metrics[DT::Depth0]->fill_extent(0.0F, 0.0F, &pwidth, &pheight);
 		
 		inset *= 2.0F;
-		this->master->move_to(this->dates[DT::BeginTime], frame, GraphletAnchor::LT, GraphletAnchor::LT, this->label_max_width + xgapsize, y0);
+		this->master->move_to(this->dates[DT::BeginTime], frame, GraphletAnchor::LT, GraphletAnchor::LT, this->label_max_width * 3.0F, y0);
 		this->master->move_to(this->dates[DT::EndTime], this->dates[DT::BeginTime], GraphletAnchor::LB, GraphletAnchor::LT, 0.0F, ygapsize);
 
-		this->reflow_input_fields(frame, DT::Depth0, DT::_, this->label_max_width * 3.0F, y0, xgapsize, ygapsize, pheight, DT::TrackWidth);
+		this->master->move_to(this->toggles[DT::PSVisible], this->dates[DT::EndTime], GraphletAnchor::LB, GraphletAnchor::LT, 0.0F, y0 * 2.0F);
+		this->master->move_to(this->toggles[DT::SBVisible], this->toggles[DT::PSVisible], GraphletAnchor::LB, GraphletAnchor::LT, 0.0F, ygapsize);
+
+		this->reflow_input_fields(frame, DT::Depth0, DT::_, 0.0F, y0, xgapsize, ygapsize, pheight, DT::TrackWidth);
+		this->master->move_to(this->color_picker, this->labels[DT::TrackColor], GraphletAnchor::RC, GraphletAnchor::LC, xgapsize);
 		
-		this->master->move_to(this->sketch, frame, GraphletAnchor::RT, GraphletAnchor::RT, -inset, inset);
-		this->master->move_to(this->track, frame, GraphletAnchor::CB, GraphletAnchor::CB, 0.0F, -inset);
+		this->master->move_to(this->track, frame, GraphletAnchor::RT, GraphletAnchor::RT, -inset, inset);
 	}
 
 	void on_graphlet_ready(IGraphlet* g) {
 		if (this->track == g) { // also see `this->load()`
-			this->entity = this->track->clone_profile(this->entity);
+			this->entity = this->track->clone_track(this->entity);
 			this->refresh_input_fields();
 		}
 	}
@@ -150,43 +144,61 @@ public:
 		if (this->track != nullptr) {
 			this->track->preview(nullptr);
 			
-			this->entity = this->track->clone_profile(this->entity, true);
+			this->entity = this->track->clone_track(this->entity, true);
 			this->refresh_input_fields();
 		}
 
 		return true;
 	}
 
+	bool on_default() {
+		if (this->entity == nullptr) {
+			this->entity = ref new DredgeTrack();
+		}
+
+		this->metrics[DT::Depth0]->set_value(10.0);
+		this->metrics[DT::TrackInterval]->set_value(1.0);
+		this->metrics[DT::AfterImage]->set_value(24.0);
+
+		this->metrics[DT::TrackWidth]->set_value(1.0);
+		
+		return true;
+	}
+
 public:
 	IGraphlet* thumbnail() {
-		return this->sketch;
+		return this->track;
 	}
 
 private:
 	void refresh_entity() {
 		if (this->entity == nullptr) {
-			this->entity = ref new DragTrack();
+			this->entity = ref new DredgeTrack();
 		}
 
-		//Section_Refresh_Vertex(this->entity, width, this->metrics, DT::Width);
-		//Section_Refresh_Vertex(this->entity, max_depth, this->metrics, DT::MaxDepth);
-		//Section_Refresh_Vertex(this->entity, min_depth, this->metrics, DT::MinDepth);
-		
-		//Section_Refresh_Vertex(this->entity, depth_distance, this->metrics, DT::DepthDistance);
-		//Section_Refresh_Vertex(this->entity, dragheads_distance, this->metrics, DT::DragHeadsDistance);
+		this->entity->depth0 = this->metrics[DT::Depth0]->get_value();
+		this->entity->interval = this->metrics[DT::TrackInterval]->get_value();
+		this->entity->after_image_period = this->metrics[DT::AfterImage]->get_value();
+
+		this->entity->track_width = float(this->metrics[DT::TrackWidth]->get_value());
+
+		this->entity->ps_visible = this->toggles[DT::PSVisible]->checked();
+		this->entity->sb_visible = this->toggles[DT::SBVisible]->checked();
 	}
 
 	void refresh_input_fields() {
 		if (this->entity != nullptr) {
 			this->master->begin_update_sequence();
 
-			//Section_Display_Vertex(this->entity, width, this->metrics, DT::Width);
-			//Section_Display_Vertex(this->entity, max_depth, this->metrics, DT::MaxDepth);
-			//Section_Display_Vertex(this->entity, min_depth, this->metrics, DT::MinDepth);
-			
-			//Section_Display_Vertex(this->entity, depth_distance, this->metrics, DT::DepthDistance);
-			//Section_Display_Vertex(this->entity, dragheads_distance, this->metrics, DT::DragHeadsDistance);
-			
+			this->metrics[DT::Depth0]->set_value(this->entity->depth0);
+			this->metrics[DT::TrackInterval]->set_value(this->entity->interval);
+			this->metrics[DT::AfterImage]->set_value(this->entity->after_image_period);
+
+			this->metrics[DT::TrackWidth]->set_value(this->entity->track_width);
+
+			this->toggles[DT::PSVisible]->toggle(this->entity->ps_visible);
+			this->toggles[DT::SBVisible]->toggle(this->entity->sb_visible);
+
 			this->master->end_update_sequence();
 		}
 	}
@@ -218,60 +230,71 @@ private:
 
 		return input;
 	}
+	
+	Credit<Togglet, DT>* insert_toggle(DT id, float width) {
+		auto input = new Credit<Togglet, DT>(true, _speak(id), width);
+
+		this->master->insert_one(input, id);
+
+		return input;
+	}
 
 	void reflow_input_fields(IGraphlet* frame, DT id0, DT idp1, float x0, float y0, float xgapsize, float ygapsize, float pheight, DT sep) {
 		float idx0 = _F(id0);
-		float xoff =  x0 + this->label_max_width + xgapsize;
+		float xoff =  x0 + this->label_max_width + xgapsize * 1.618F;
 		float yoff0 = y0;
 
 		for (DT id = id0; id < idp1; id++) {
-			float yrow = (pheight + ygapsize * 0.5F) * (_F(id) - idx0);
+			float yrow = (pheight + ygapsize) * (_F(id) - idx0);
 			
 			if (id == sep) { // add a blank before `sep`
 				yoff0 *= 2.0F;
 			}
 
 			this->master->move_to(this->labels[id], frame, GraphletAnchor::LT, GraphletAnchor::RT, xoff, yoff0 + yrow);
-			this->master->move_to(this->metrics[id], this->labels[id], GraphletAnchor::RC, GraphletAnchor::LC, xgapsize * 0.618F);
+			this->master->move_to(this->metrics[id], this->labels[id], GraphletAnchor::RC, GraphletAnchor::LC, xgapsize);
 		}
 	}
 
 private:
 	float label_max_width;
 	DimensionStyle input_style;
-	DragTrack^ entity;
-	Platform::String^ section;
+	DredgeTrack^ entity;
+	Platform::String^ dregertrack;
 
 private: // never delete these graphlet manually
-	DragTracklet* track;
+	DredgeTracklet* track;
+	ColorPickerlet* color_picker;
 	std::map<DT, Labellet*> labels;
 	std::map<DT, Credit<Dimensionlet, DT>*> metrics;
 	std::map<DT, Credit<DatePickerlet, DT>*> dates;
-	Planetlet* sketch;
+	std::map<DT, Credit<Togglet, DT>*> toggles;
 	
 private:
-	DragTrackEditor* master;
+	DredgeTrackEditor* master;
 };
 
 /*************************************************************************************************/
-DragTrackEditor::DragTrackEditor(Platform::String^ section) : EditorPlanet(__MODULE__) {
-	this->self = new DragTrackEditor::Self(this, section);
+DredgeTrackEditor::DredgeTrackEditor(Platform::String^ dregertrack) : EditorPlanet(__MODULE__) {
+	this->self = new DredgeTrackEditor::Self(this, dregertrack);
 }
 
-DragTrackEditor::~DragTrackEditor() {
+DredgeTrackEditor::~DredgeTrackEditor() {
 	delete this->self;
 }
 
-void DragTrackEditor::load(CanvasCreateResourcesReason reason, float width, float height) {
+void DredgeTrackEditor::load(CanvasCreateResourcesReason reason, float width, float height) {
 	float bg_width, bg_height;
 
 	EditorPlanet::load(reason, width, height);
+
+	this->enable_default(true);
 
 	this->background->fill_extent(0.0F, 0.0F, &bg_width, &bg_height);
 	this->self->load(reason, bg_width, bg_height, (width - bg_width) * 0.5F);
 }
 
-void DragTrackEditor::reflow(float width, float height) {
+void DredgeTrackEditor::reflow(float width, float height) {
 	float bg_width, bg_height;
 	
 	EditorPlanet::reflow(width, height);
@@ -280,22 +303,26 @@ void DragTrackEditor::reflow(float width, float height) {
 	this->self->reflow(this->background, width, height, (width - bg_width) * 0.5F);
 }
 
-void DragTrackEditor::on_graphlet_ready(IGraphlet* g) {
+void DredgeTrackEditor::on_graphlet_ready(IGraphlet* g) {
 	this->self->on_graphlet_ready(g);
 }
 
-IGraphlet* DragTrackEditor::thumbnail_graphlet() {
+IGraphlet* DredgeTrackEditor::thumbnail_graphlet() {
 	return this->self->thumbnail();
 }
 
-bool DragTrackEditor::on_apply() {
+bool DredgeTrackEditor::on_apply() {
 	return this->self->on_apply();
 }
 
-bool DragTrackEditor::on_reset() {
+bool DredgeTrackEditor::on_reset() {
 	return this->self->on_reset();
 }
 
-bool DragTrackEditor::on_edit(Dimensionlet* dim) {
+bool DredgeTrackEditor::on_default() {
+	return this->self->on_default();
+}
+
+bool DredgeTrackEditor::on_edit(Dimensionlet* dim) {
 	return this->self->on_edit(static_cast<Credit<Dimensionlet, DT>*>(dim));
 }

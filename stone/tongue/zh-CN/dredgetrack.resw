@@ -130,18 +130,18 @@
     <value>结束时间</value>
   </data>
   <data name="PSVisible" xml:space="preserve">
-    <value>显示左耙轨迹</value>
+    <value>左耙轨迹</value>
   </data>
   <data name="SBVisible" xml:space="preserve">
-    <value>显示右耙轨迹</value>
+    <value>右耙轨迹</value>
   </data>
   <data name="TrackColor" xml:space="preserve">
-    <value>轨迹颜色</value>
+    <value>轨迹线颜色</value>
   </data>
   <data name="TrackInterval" xml:space="preserve">
     <value>记录间隔距离</value>
   </data>
   <data name="TrackWidth" xml:space="preserve">
-    <value>轨迹宽度</value>
+    <value>轨迹线宽度</value>
   </data>
 </root>
