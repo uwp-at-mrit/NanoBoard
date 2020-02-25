@@ -46,8 +46,7 @@ namespace {
 		_,
 
 		// misc
-		BeginTime, EndTime,
-		PSVisible, SBVisible
+		BeginTime, EndTime
 	};
 }
 
@@ -80,8 +79,10 @@ public:
 		this->dates[DT::EndTime] = this->insert_date_picker(DT::EndTime);
 
 		this->dates[DT::BeginTime]->fill_extent(0.0F, 0.0F, &in_width, nullptr);
-		this->toggles[DT::PSVisible] = this->insert_toggle(DT::PSVisible, in_width);
-		this->toggles[DT::SBVisible] = this->insert_toggle(DT::SBVisible, in_width);
+
+		for (auto vid = _E0(DredgeTrackType); vid < DredgeTrackType::_; vid++) {
+			this->toggles[vid] = this->insert_toggle(vid, in_width);
+		}
 
 		this->track = new DredgeTracklet(nullptr, this->dregertrack, width * 0.2F);
 		this->master->insert(this->track);
@@ -99,13 +100,24 @@ public:
 		this->master->move_to(this->dates[DT::BeginTime], frame, GraphletAnchor::LT, GraphletAnchor::LT, this->label_max_width * 3.0F, y0);
 		this->master->move_to(this->dates[DT::EndTime], this->dates[DT::BeginTime], GraphletAnchor::LB, GraphletAnchor::LT, 0.0F, ygapsize);
 
-		this->master->move_to(this->toggles[DT::PSVisible], this->dates[DT::EndTime], GraphletAnchor::LB, GraphletAnchor::LT, 0.0F, y0 * 2.0F);
-		this->master->move_to(this->toggles[DT::SBVisible], this->toggles[DT::PSVisible], GraphletAnchor::LB, GraphletAnchor::LT, 0.0F, ygapsize);
-
 		this->reflow_input_fields(frame, DT::Depth0, DT::_, 0.0F, y0, xgapsize, ygapsize, pheight, DT::TrackWidth);
 		this->master->move_to(this->color_picker, this->labels[DT::TrackColor], GraphletAnchor::RC, GraphletAnchor::LC, xgapsize);
 		
 		this->master->move_to(this->track, frame, GraphletAnchor::RT, GraphletAnchor::RT, -inset, inset);
+
+		{ // reflow toggles
+			auto last_dtt = DredgeTrackType::_;
+	
+			for (auto id = _E0(DredgeTrackType); id < DredgeTrackType::_; id++) {
+				if (last_dtt == DredgeTrackType::_) {
+					this->master->move_to(this->toggles[id], this->dates[DT::EndTime], GraphletAnchor::LB, GraphletAnchor::LT, 0.0F, y0 * 2.0F);
+				} else {
+					this->master->move_to(this->toggles[id], this->toggles[last_dtt], GraphletAnchor::LB, GraphletAnchor::LT, 0.0F, ygapsize);
+				}
+
+				last_dtt = id;
+			}
+		}
 	}
 
 	void on_graphlet_ready(IGraphlet* g) {
@@ -156,12 +168,24 @@ public:
 			this->entity = ref new DredgeTrack();
 		}
 
+		this->master->begin_update_sequence();
+
 		this->metrics[DT::Depth0]->set_value(10.0);
 		this->metrics[DT::TrackInterval]->set_value(1.0);
 		this->metrics[DT::AfterImage]->set_value(24.0);
 
 		this->metrics[DT::TrackWidth]->set_value(1.0);
+
+		for (auto id = _E0(DredgeTrackType); id < DredgeTrackType::_; id++) {
+			this->toggles[id]->toggle(false);
+
+			switch (id) {
+			case DredgeTrackType::PSDrag: case DredgeTrackType::SBDrag: this->toggles[id]->toggle(); break;
+			}
+		}
 		
+		this->master->end_update_sequence();
+
 		return true;
 	}
 
@@ -182,8 +206,9 @@ private:
 
 		this->entity->track_width = float(this->metrics[DT::TrackWidth]->get_value());
 
-		this->entity->ps_visible = this->toggles[DT::PSVisible]->checked();
-		this->entity->sb_visible = this->toggles[DT::SBVisible]->checked();
+		for (auto id = _E0(DredgeTrackType); id < DredgeTrackType::_; id++) {
+			this->entity->visibles[_I(id)] = this->toggles[id]->checked();
+		}
 	}
 
 	void refresh_input_fields() {
@@ -196,8 +221,9 @@ private:
 
 			this->metrics[DT::TrackWidth]->set_value(this->entity->track_width);
 
-			this->toggles[DT::PSVisible]->toggle(this->entity->ps_visible);
-			this->toggles[DT::SBVisible]->toggle(this->entity->sb_visible);
+			for (auto id = _E0(DredgeTrackType); id < DredgeTrackType::_; id++) {
+				this->toggles[id]->toggle(this->entity->visibles[_I(id)]);
+			}
 
 			this->master->end_update_sequence();
 		}
@@ -231,8 +257,8 @@ private:
 		return input;
 	}
 	
-	Credit<Togglet, DT>* insert_toggle(DT id, float width) {
-		auto input = new Credit<Togglet, DT>(true, _speak(id), width);
+	Credit<Togglet, DredgeTrackType>* insert_toggle(DredgeTrackType id, float width) {
+		auto input = new Credit<Togglet, DredgeTrackType>(true, _speak(id), width);
 
 		this->master->insert_one(input, id);
 
@@ -268,7 +294,7 @@ private: // never delete these graphlet manually
 	std::map<DT, Labellet*> labels;
 	std::map<DT, Credit<Dimensionlet, DT>*> metrics;
 	std::map<DT, Credit<DatePickerlet, DT>*> dates;
-	std::map<DT, Credit<Togglet, DT>*> toggles;
+	std::map<DredgeTrackType, Credit<Togglet, DredgeTrackType>*> toggles;
 	
 private:
 	DredgeTrackEditor* master;

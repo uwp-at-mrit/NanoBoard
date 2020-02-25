@@ -126,6 +126,8 @@ public:
 			this->entity = ref new ColorPlot();
 		}
 
+		this->master->begin_update_sequence();
+
 		for (unsigned int idx = 0; idx < ColorPlotSize; idx++) {
 			this->depths[idx]->set_value(double(idx + 1));
 		}
@@ -150,6 +152,8 @@ public:
 		this->pickers[17]->color(Colours::make(198U, 138U, 128U));
 		this->pickers[18]->color(Colours::make(124U, 68U, 44U));
 		this->pickers[19]->color(Colours::make(98U, 49U, 49U));
+
+		this->master->end_update_sequence();
 
 		return true;
 	}

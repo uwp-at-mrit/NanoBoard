@@ -129,10 +129,16 @@
   <data name="EndTime" xml:space="preserve">
     <value>End Time</value>
   </data>
-  <data name="PSVisible" xml:space="preserve">
+  <data name="GPS" xml:space="preserve">
+    <value>GPS Visible</value>
+  </data>
+  <data name="PSDrag" xml:space="preserve">
     <value>PS Visible</value>
   </data>
-  <data name="SBVisible" xml:space="preserve">
+  <data name="Reamer" xml:space="preserve">
+    <value>Reamer Visible</value>
+  </data>
+  <data name="SBDrag" xml:space="preserve">
     <value>SB Visible</value>
   </data>
   <data name="TrackColor" xml:space="preserve">
