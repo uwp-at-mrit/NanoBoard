@@ -144,6 +144,9 @@
   <data name="TrackColor" xml:space="preserve">
     <value>Track Color</value>
   </data>
+  <data name="TrackDistance" xml:space="preserve">
+    <value>Track Distance</value>
+  </data>
   <data name="TrackInterval" xml:space="preserve">
     <value>Track Interval</value>
   </data>

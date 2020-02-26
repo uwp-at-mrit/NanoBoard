@@ -40,7 +40,7 @@ static CanvasSolidColorBrush^ water_color = Colours::SeaGreen;
 namespace {
 	// order matters
 	private enum class DT {
-		Depth0, TrackInterval, AfterImage,
+		Depth0, TrackInterval, TrackDistance, AfterImage,
 		TrackWidth, TrackColor,
 
 		_,
@@ -53,7 +53,7 @@ namespace {
 class WarGrey::DTPM::DredgeTrackEditor::Self {
 public:
 	Self(DredgeTrackEditor* master, Platform::String^ dregertrack) : master(master), label_max_width(0.0F), dregertrack(dregertrack), entity(nullptr) {
-		this->input_style = make_highlight_dimension_style(label_font->FontSize, 8U, 1U);
+		this->input_style = make_highlight_dimension_style(label_font->FontSize, 8U, 2U);
 		this->input_style.unit_color = label_color;
 	}
 
@@ -172,6 +172,7 @@ public:
 
 		this->metrics[DT::Depth0]->set_value(10.0);
 		this->metrics[DT::TrackInterval]->set_value(1.0);
+		this->metrics[DT::TrackDistance]->set_value(1000.0);
 		this->metrics[DT::AfterImage]->set_value(24.0);
 
 		this->metrics[DT::TrackWidth]->set_value(1.0);
@@ -201,7 +202,8 @@ private:
 		}
 
 		this->entity->depth0 = this->metrics[DT::Depth0]->get_value();
-		this->entity->interval = this->metrics[DT::TrackInterval]->get_value();
+		this->entity->subinterval = this->metrics[DT::TrackInterval]->get_value();
+		this->entity->partition_distance = this->metrics[DT::TrackDistance]->get_value();
 		this->entity->after_image_period = this->metrics[DT::AfterImage]->get_value();
 
 		this->entity->track_width = float(this->metrics[DT::TrackWidth]->get_value());
@@ -216,7 +218,8 @@ private:
 			this->master->begin_update_sequence();
 
 			this->metrics[DT::Depth0]->set_value(this->entity->depth0);
-			this->metrics[DT::TrackInterval]->set_value(this->entity->interval);
+			this->metrics[DT::TrackInterval]->set_value(this->entity->subinterval);
+			this->metrics[DT::TrackDistance]->set_value(this->entity->partition_distance);
 			this->metrics[DT::AfterImage]->set_value(this->entity->after_image_period);
 
 			this->metrics[DT::TrackWidth]->set_value(this->entity->track_width);

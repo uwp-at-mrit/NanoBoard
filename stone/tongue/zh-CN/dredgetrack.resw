@@ -144,6 +144,9 @@
   <data name="TrackColor" xml:space="preserve">
     <value>轨迹线颜色</value>
   </data>
+  <data name="TrackDistance" xml:space="preserve">
+    <value>轨迹分段距离</value>
+  </data>
   <data name="TrackInterval" xml:space="preserve">
     <value>记录间隔距离</value>
   </data>
