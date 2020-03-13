@@ -4,6 +4,7 @@
 
 #include "graphlet/ui/textlet.hpp"
 #include "graphlet/ui/buttonlet.hpp"
+#include "graphlet/time/datepickerlet.hpp"
 
 #include "graphlet/shapelet.hpp"
 
@@ -31,9 +32,12 @@ namespace WarGrey::DTPM {
 	protected:
 		virtual bool on_apply() = 0;
 		virtual bool on_reset() = 0;
-		virtual bool on_edit(WarGrey::SCADA::Dimensionlet* dim) = 0;
 		virtual bool on_discard() { return true; }
 		virtual bool on_default() { return false; }
+
+	protected:
+		virtual bool on_edit(WarGrey::SCADA::Dimensionlet* dim) = 0;
+		virtual bool on_date_picked(WarGrey::SCADA::DatePickerlet* dim) { return true; };
 
 	protected: // never delete these graphlets manually
 		WarGrey::SCADA::Labellet* caption;

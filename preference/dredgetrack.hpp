@@ -19,6 +19,7 @@ namespace WarGrey::DTPM {
 		bool on_reset() override;
 		bool on_default() override;
 		bool on_edit(WarGrey::SCADA::Dimensionlet* dim) override;
+		bool on_date_picked(WarGrey::SCADA::DatePickerlet* dim) override;
 
 	private:
 		class Self;

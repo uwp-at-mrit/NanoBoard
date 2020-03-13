@@ -120,7 +120,7 @@
   <data name="colorplot" xml:space="preserve">
     <value>水深与色块</value>
   </data>
-  <data name="dragtrack" xml:space="preserve">
+  <data name="dredgetrack" xml:space="preserve">
     <value>疏浚轨迹设置</value>
   </data>
   <data name="gps_cs" xml:space="preserve">

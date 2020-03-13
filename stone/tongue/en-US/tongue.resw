@@ -120,7 +120,7 @@
   <data name="colorplot" xml:space="preserve">
     <value>Depth Color Plot</value>
   </data>
-  <data name="dragtrack" xml:space="preserve">
+  <data name="dredgetrack" xml:space="preserve">
     <value>DH Track</value>
   </data>
   <data name="gps_cs" xml:space="preserve">

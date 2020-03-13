@@ -97,9 +97,20 @@ bool EditorPlanet::on_key(VirtualKey key, bool wargrey_keyboard) {
 void EditorPlanet::on_focus(IGraphlet* g, bool yes) {
 	if (yes) {
 		auto editor = dynamic_cast<IEditorlet*>(g);
+		auto date_picker = dynamic_cast<DatePickerlet*>(g);
 
 		if (editor != nullptr) {
 			this->show_virtual_keyboard(ScreenKeyboard::Numpad);
+		} else if (date_picker != nullptr) {
+			this->show_virtual_keyboard(ScreenKeyboard::Bucketpad, GraphletAnchor::CB, 0.0F, 4.0F);
+		}
+	} else {
+		auto date_picker = dynamic_cast<DatePickerlet*>(g);
+		
+		if (date_picker != nullptr) {
+			if (this->on_date_picked(date_picker)) {
+				this->notify_modification();
+			}
 		}
 	}
 }

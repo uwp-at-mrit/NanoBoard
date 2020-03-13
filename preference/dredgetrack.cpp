@@ -3,14 +3,11 @@
 #include "preference/dredgetrack.hpp"
 
 #include "graphlet/filesystem/project/dredgetracklet.hpp"
-#include "graphlet/time/datepickerlet.hpp"
 #include "graphlet/ui/colorpickerlet.hpp"
 #include "graphlet/ui/togglet.hpp"
 
 #include "graphlet/shapelet.hpp"
 #include "graphlet/planetlet.hpp"
-
-#include "palette/xterm256.hpp"
 
 #include "datum/flonum.hpp"
 #include "datum/time.hpp"
@@ -59,6 +56,7 @@ public:
 
 public:
 	void load(CanvasCreateResourcesReason reason, float width, float height, float inset) {
+		float icon_width = width * 0.2F;
 		float in_width, in_height;
 
 		for (DT id = _E0(DT); id < DT::_; id++) {
@@ -69,7 +67,7 @@ public:
 			case DT::TrackWidth: this->metrics[id] = this->insert_input_field(id, 0.0, "pixel"); break;
 			case DT::TrackColor: {
 				this->metrics[DT::Depth0]->fill_extent(0.0F, 0.0F, &in_width, &in_height);
-				this->color_picker = this->master->insert_one(new ColorPickerlet(Palette::Xterm256, in_width, in_height));
+				this->color_picker = this->master->insert_one(new ColorPickerlet(Palette::X11, in_width, in_height));
 			}; break;
 			default: this->metrics[id] = this->insert_input_field(id, 0.0, "meter");
 			}
@@ -78,13 +76,11 @@ public:
 		this->dates[DT::BeginTime] = this->insert_date_picker(DT::BeginTime);
 		this->dates[DT::EndTime] = this->insert_date_picker(DT::EndTime);
 
-		this->dates[DT::BeginTime]->fill_extent(0.0F, 0.0F, &in_width, nullptr);
-
 		for (auto vid = _E0(DredgeTrackType); vid < DredgeTrackType::_; vid++) {
-			this->toggles[vid] = this->insert_toggle(vid, in_width);
+			this->toggles[vid] = this->insert_toggle(vid, icon_width);
 		}
 
-		this->track = new DredgeTracklet(nullptr, this->dregertrack, width * 0.2F);
+		this->track = new DredgeTracklet(nullptr, this->dregertrack, icon_width);
 		this->master->insert(this->track);
 	}
 
@@ -110,7 +106,7 @@ public:
 	
 			for (auto id = _E0(DredgeTrackType); id < DredgeTrackType::_; id++) {
 				if (last_dtt == DredgeTrackType::_) {
-					this->master->move_to(this->toggles[id], this->dates[DT::EndTime], GraphletAnchor::LB, GraphletAnchor::LT, 0.0F, y0 * 2.0F);
+					this->master->move_to(this->toggles[id], this->track, GraphletAnchor::RB, GraphletAnchor::RT, 0.0F, y0 * 2.0F);
 				} else {
 					this->master->move_to(this->toggles[id], this->toggles[last_dtt], GraphletAnchor::LB, GraphletAnchor::LT, 0.0F, ygapsize);
 				}
@@ -143,6 +139,28 @@ public:
 		}
 
 		return (modified && (dim->id < DT::_));
+	}
+
+	bool on_edit(Credit<DatePickerlet, DT>* dp) {
+		long long new_date = dp->get_value();
+		bool modified = (this->entity == nullptr);
+
+		if (!modified) {
+			switch (dp->id) {
+			case DT::BeginTime: modified = (new_date != this->entity->begin_timepoint); break;
+			case DT::EndTime: modified = (new_date != this->entity->end_timepoint); break;
+			}
+		}
+
+		if (modified) {
+			this->refresh_entity();
+
+			this->track->moor(GraphletAnchor::CB);
+			this->track->preview(this->entity);
+			this->track->clear_moor();
+		}
+
+		return modified;
 	}
 
 	bool on_apply() {
@@ -184,7 +202,14 @@ public:
 			case DredgeTrackType::PSDrag: case DredgeTrackType::SBDrag: this->toggles[id]->toggle(); break;
 			}
 		}
-		
+
+		{ // set contrastive period
+			long long now = current_seconds();
+
+			this->dates[DT::BeginTime]->set_value(seconds_add_days(now, -7));
+			this->dates[DT::EndTime]->set_value(now);
+		}
+
 		this->master->end_update_sequence();
 
 		return true;
@@ -211,6 +236,9 @@ private:
 		for (auto id = _E0(DredgeTrackType); id < DredgeTrackType::_; id++) {
 			this->entity->visibles[_I(id)] = this->toggles[id]->checked();
 		}
+
+		this->entity->begin_timepoint = this->dates[DT::BeginTime]->get_value();
+		this->entity->end_timepoint = this->dates[DT::EndTime]->get_value();
 	}
 
 	void refresh_input_fields() {
@@ -227,6 +255,9 @@ private:
 			for (auto id = _E0(DredgeTrackType); id < DredgeTrackType::_; id++) {
 				this->toggles[id]->toggle(this->entity->visibles[_I(id)]);
 			}
+
+			this->dates[DT::BeginTime]->set_value(this->entity->begin_timepoint);
+			this->dates[DT::EndTime]->set_value(this->entity->end_timepoint);
 
 			this->master->end_update_sequence();
 		}
@@ -253,7 +284,7 @@ private:
 	}
 
 	Credit<DatePickerlet, DT>* insert_date_picker(DT id) {
-		auto input = new Credit<DatePickerlet, DT>(current_seconds(), _speak(id));
+		auto input = new Credit<DatePickerlet, DT>(DatePickerState::Input, current_seconds(), _speak(id));
 
 		this->master->insert_one(input, id);
 
@@ -354,4 +385,8 @@ bool DredgeTrackEditor::on_default() {
 
 bool DredgeTrackEditor::on_edit(Dimensionlet* dim) {
 	return this->self->on_edit(static_cast<Credit<Dimensionlet, DT>*>(dim));
+}
+
+bool DredgeTrackEditor::on_date_picked(DatePickerlet* dp) {
+	return this->self->on_edit(static_cast<Credit<DatePickerlet, DT>*>(dp));
 }
