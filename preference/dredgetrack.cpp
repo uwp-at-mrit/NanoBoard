@@ -3,7 +3,6 @@
 #include "preference/dredgetrack.hpp"
 
 #include "graphlet/filesystem/project/dredgetracklet.hpp"
-#include "graphlet/ui/colorpickerlet.hpp"
 #include "graphlet/ui/togglet.hpp"
 
 #include "graphlet/shapelet.hpp"
@@ -38,7 +37,7 @@ namespace {
 	// order matters
 	private enum class DT {
 		Depth0, TrackInterval, TrackDistance, AfterImage,
-		TrackWidth, TrackColor,
+		TrackWidth,
 
 		_,
 
@@ -57,18 +56,13 @@ public:
 public:
 	void load(CanvasCreateResourcesReason reason, float width, float height, float inset) {
 		float icon_width = width * 0.2F;
-		float in_width, in_height;
-
+		
 		for (DT id = _E0(DT); id < DT::_; id++) {
 			this->labels[id] = this->insert_label(id);
 
 			switch (id) {
 			case DT::AfterImage: this->metrics[id] = this->insert_input_field(id, 0.0, "hour"); break;
 			case DT::TrackWidth: this->metrics[id] = this->insert_input_field(id, 0.0, "pixel"); break;
-			case DT::TrackColor: {
-				this->metrics[DT::Depth0]->fill_extent(0.0F, 0.0F, &in_width, &in_height);
-				this->color_picker = this->master->insert_one(new ColorPickerlet(Palette::X11, in_width, in_height));
-			}; break;
 			default: this->metrics[id] = this->insert_input_field(id, 0.0, "meter");
 			}
 		}
@@ -95,10 +89,7 @@ public:
 		inset *= 2.0F;
 		this->master->move_to(this->dates[DT::BeginTime], frame, GraphletAnchor::LT, GraphletAnchor::LT, this->label_max_width * 3.0F, y0);
 		this->master->move_to(this->dates[DT::EndTime], this->dates[DT::BeginTime], GraphletAnchor::LB, GraphletAnchor::LT, 0.0F, ygapsize);
-
 		this->reflow_input_fields(frame, DT::Depth0, DT::_, 0.0F, y0, xgapsize, ygapsize, pheight, DT::TrackWidth);
-		this->master->move_to(this->color_picker, this->labels[DT::TrackColor], GraphletAnchor::RC, GraphletAnchor::LC, xgapsize);
-		
 		this->master->move_to(this->track, frame, GraphletAnchor::RT, GraphletAnchor::RT, -inset, inset);
 
 		{ // reflow toggles
@@ -190,7 +181,7 @@ public:
 
 		this->metrics[DT::Depth0]->set_value(10.0);
 		this->metrics[DT::TrackInterval]->set_value(1.0);
-		this->metrics[DT::TrackDistance]->set_value(1000.0);
+		this->metrics[DT::TrackDistance]->set_value(10.0);
 		this->metrics[DT::AfterImage]->set_value(24.0);
 
 		this->metrics[DT::TrackWidth]->set_value(1.0);
@@ -324,7 +315,6 @@ private:
 
 private: // never delete these graphlet manually
 	DredgeTracklet* track;
-	ColorPickerlet* color_picker;
 	std::map<DT, Labellet*> labels;
 	std::map<DT, Credit<Dimensionlet, DT>*> metrics;
 	std::map<DT, Credit<DatePickerlet, DT>*> dates;
