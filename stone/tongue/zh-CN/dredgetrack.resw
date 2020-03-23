@@ -132,6 +132,9 @@
   <data name="GPS" xml:space="preserve">
     <value>GPS 轨迹</value>
   </data>
+  <data name="History" xml:space="preserve">
+    <value>轨迹线历史</value>
+  </data>
   <data name="PSDrag" xml:space="preserve">
     <value>左耙轨迹</value>
   </data>

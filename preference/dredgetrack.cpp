@@ -42,7 +42,7 @@ namespace {
 		_,
 
 		// misc
-		BeginTime, EndTime
+		BeginTime, EndTime, History
 	};
 }
 
@@ -67,12 +67,13 @@ public:
 			}
 		}
 
-		this->dates[DT::BeginTime] = this->insert_date_picker(DT::BeginTime);
-		this->dates[DT::EndTime] = this->insert_date_picker(DT::EndTime);
-
 		for (auto vid = _E0(DredgeTrackType); vid < DredgeTrackType::_; vid++) {
 			this->toggles[vid] = this->insert_toggle(vid, icon_width);
 		}
+
+		this->dates[DT::BeginTime] = this->insert_date_picker(DT::BeginTime);
+		this->dates[DT::EndTime] = this->insert_date_picker(DT::EndTime);
+		this->history_toggle = this->master->insert_one(new Togglet(true, _speak(DT::History), icon_width));
 
 		this->track = new DredgeTracklet(nullptr, this->dregertrack, icon_width);
 		this->master->insert(this->track);
@@ -87,7 +88,8 @@ public:
 		this->metrics[DT::Depth0]->fill_extent(0.0F, 0.0F, &pwidth, &pheight);
 		
 		inset *= 2.0F;
-		this->master->move_to(this->dates[DT::BeginTime], frame, GraphletAnchor::LT, GraphletAnchor::LT, this->label_max_width * 3.0F, y0);
+		this->master->move_to(this->history_toggle, frame, GraphletAnchor::LT, GraphletAnchor::LT, this->label_max_width * 3.0F, y0);
+		this->master->move_to(this->dates[DT::BeginTime], this->history_toggle, GraphletAnchor::LB, GraphletAnchor::LT, 0.0F, ygapsize);
 		this->master->move_to(this->dates[DT::EndTime], this->dates[DT::BeginTime], GraphletAnchor::LB, GraphletAnchor::LT, 0.0F, ygapsize);
 		this->reflow_input_fields(frame, DT::Depth0, DT::_, 0.0F, y0, xgapsize, ygapsize, pheight, DT::TrackWidth);
 		this->master->move_to(this->track, frame, GraphletAnchor::RT, GraphletAnchor::RT, -inset, inset);
@@ -184,8 +186,8 @@ public:
 		this->metrics[DT::TrackDistance]->set_value(10.0);
 		this->metrics[DT::AfterImage]->set_value(24.0);
 
-		this->metrics[DT::TrackWidth]->set_value(1.0);
-
+		this->metrics[DT::TrackWidth]->set_value(2.0);
+		
 		for (auto id = _E0(DredgeTrackType); id < DredgeTrackType::_; id++) {
 			this->toggles[id]->toggle(false);
 
@@ -194,9 +196,10 @@ public:
 			}
 		}
 
-		{ // set contrastive period
+		{ // set history period
 			long long now = current_seconds();
 
+			this->history_toggle->toggle(false);
 			this->dates[DT::BeginTime]->set_value(seconds_add_days(now, -7));
 			this->dates[DT::EndTime]->set_value(now);
 		}
@@ -230,6 +233,7 @@ private:
 
 		this->entity->begin_timepoint = this->dates[DT::BeginTime]->get_value();
 		this->entity->end_timepoint = this->dates[DT::EndTime]->get_value();
+		this->entity->show_history = this->history_toggle->checked();
 	}
 
 	void refresh_input_fields() {
@@ -249,6 +253,7 @@ private:
 
 			this->dates[DT::BeginTime]->set_value(this->entity->begin_timepoint);
 			this->dates[DT::EndTime]->set_value(this->entity->end_timepoint);
+			this->history_toggle->toggle(this->entity->show_history);
 
 			this->master->end_update_sequence();
 		}
@@ -319,6 +324,7 @@ private: // never delete these graphlet manually
 	std::map<DT, Credit<Dimensionlet, DT>*> metrics;
 	std::map<DT, Credit<DatePickerlet, DT>*> dates;
 	std::map<DredgeTrackType, Credit<Togglet, DredgeTrackType>*> toggles;
+	Togglet* history_toggle;
 	
 private:
 	DredgeTrackEditor* master;

@@ -132,6 +132,9 @@
   <data name="GPS" xml:space="preserve">
     <value>GPS Visible</value>
   </data>
+  <data name="History" xml:space="preserve">
+    <value>History Track</value>
+  </data>
   <data name="PSDrag" xml:space="preserve">
     <value>PS Visible</value>
   </data>
